@@ -101,7 +101,13 @@
     margin: 12px 0 0; font-size: 13.5px; line-height: 1.65; color: #6B5876;
     letter-spacing: -0.2px; word-break: keep-all;
   }
-  .mini-chips { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+  .mini-chips {
+    display: flex; gap: 6px; margin-top: 12px; flex-wrap: nowrap;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .mini-chips::-webkit-scrollbar { display: none; }
+  .mini { flex: 0 0 auto; }
   .mini {
     font-size: 10.5px; font-weight: 600; color: #7A6484;
     background: rgba(255,255,255,.62); border: 1px solid rgba(255,255,255,.85);
@@ -846,19 +852,24 @@
     position: absolute; inset: 0; z-index: 0; pointer-events: none;
     opacity: 0; transition: opacity .5s ease;
     background-image:
-      radial-gradient(1.6px 1.6px at 12% 9%, rgba(255,255,255,.95), transparent 60%),
-      radial-gradient(1.3px 1.3px at 32% 4%, rgba(255,255,255,.8), transparent 60%),
-      radial-gradient(1.8px 1.8px at 68% 12%, rgba(255,255,255,.9), transparent 60%),
-      radial-gradient(1.2px 1.2px at 86% 7%, rgba(255,255,255,.75), transparent 60%),
-      radial-gradient(1.5px 1.5px at 46% 18%, rgba(255,255,255,.7), transparent 60%),
-      radial-gradient(1.2px 1.2px at 8% 26%, rgba(255,255,255,.6), transparent 60%),
-      radial-gradient(1.7px 1.7px at 76% 24%, rgba(255,255,255,.75), transparent 60%),
-      radial-gradient(1.2px 1.2px at 92% 33%, rgba(255,255,255,.55), transparent 60%),
-      radial-gradient(1.4px 1.4px at 24% 38%, rgba(255,255,255,.5), transparent 60%),
-      radial-gradient(1.3px 1.3px at 58% 6%, rgba(255,255,255,.7), transparent 60%),
-      radial-gradient(1.5px 1.5px at 38% 30%, rgba(255,255,255,.45), transparent 60%);
+      radial-gradient(1.7px 1.7px at 12% 52%, rgba(255,255,255,.95), transparent 60%),
+      radial-gradient(1.3px 1.3px at 32% 64%, rgba(255,255,255,.75), transparent 60%),
+      radial-gradient(1.9px 1.9px at 68% 47%, rgba(255,255,255,.9), transparent 60%),
+      radial-gradient(1.2px 1.2px at 87% 58%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(1.5px 1.5px at 46% 74%, rgba(255,255,255,.8), transparent 60%),
+      radial-gradient(1.2px 1.2px at 7% 79%, rgba(255,255,255,.6), transparent 60%),
+      radial-gradient(1.8px 1.8px at 76% 83%, rgba(255,255,255,.85), transparent 60%),
+      radial-gradient(1.2px 1.2px at 93% 71%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(1.4px 1.4px at 24% 90%, rgba(255,255,255,.65), transparent 60%),
+      radial-gradient(1.3px 1.3px at 58% 42%, rgba(255,255,255,.6), transparent 60%),
+      radial-gradient(1.5px 1.5px at 38% 96%, rgba(255,255,255,.5), transparent 60%),
+      radial-gradient(1.4px 1.4px at 84% 95%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(1.2px 1.2px at 52% 86%, rgba(255,255,255,.5), transparent 60%),
+      radial-gradient(1.6px 1.6px at 18% 68%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(1.2px 1.2px at 62% 62%, rgba(255,255,255,.45), transparent 60%),
+      radial-gradient(1.3px 1.3px at 88% 44%, rgba(255,255,255,.5), transparent 60%);
   }
-  .phone.night .stars { opacity: .75; animation: twinkle 6s ease-in-out infinite alternate; }
+  .phone.night .stars { opacity: .85; animation: twinkle 6s ease-in-out infinite alternate; }
   @keyframes twinkle { from { opacity: .45 } to { opacity: .85 } }
 
   .phone.night {
@@ -924,6 +935,8 @@
   .phone.night .tab.on { color: #F2A3C4; }
   .phone.night .tab-dot { box-shadow: 0 0 0 2px #141120, 0 2px 6px rgba(226,146,196,.7); }
   .phone.night .toast { background: rgba(243,238,255,.95); color: #2A2440; }
+  .phone.night .submit[disabled] { background: #2E2745; color: #7E7490; }
+  .phone.night .book-mini.ghost { color: #C0B2D6; }
   .phone.night .daily { background: linear-gradient(120deg, rgba(52,43,82,.92) 0%, rgba(40,34,64,.92) 55%, rgba(38,40,72,.92) 100%); }
   .phone.night .daily-body b { color: #F0A7C6; }
   .phone.night .mine-badge { background: #3A2C4E; color: #EEB3D0; }
@@ -2733,9 +2746,10 @@
   var presenceKeys = {};
   var presenceWs = null;
   var presenceRef = 0;
+  var presenceJoinRef = null;
+  var presenceTracked = false;
   var presenceHb = null;
   var presenceRetry = null;
-  var presenceJoined = false;
   var presenceMyKey = "sv" + Math.random().toString(36).slice(2, 10);
 
   function setPresence(n) {
@@ -2759,6 +2773,8 @@
 
     ws.onopen = function () {
       presenceRef++;
+      presenceJoinRef = String(presenceRef);
+      presenceTracked = false;
       ws.send(JSON.stringify({
         topic: "realtime:mongsil-presence",
         event: "phx_join",
@@ -2770,7 +2786,7 @@
           },
           access_token: SUPA_KEY
         },
-        ref: String(presenceRef)
+        ref: presenceJoinRef
       }));
       clearInterval(presenceHb);
       presenceHb = setInterval(function () {
@@ -2786,19 +2802,22 @@
       try { msg = JSON.parse(ev.data); } catch (e) { return; }
       if (!msg) return;
 
-      if (msg.event === "phx_reply" && msg.topic === "realtime:mongsil-presence") {
+      if (msg.event === "phx_reply" && msg.topic === "realtime:mongsil-presence" &&
+          presenceJoinRef !== null && msg.ref === presenceJoinRef) {
         var status = msg.payload && msg.payload.status;
         if (status === "ok") {
-          presenceJoined = true;
           var pres = (msg.payload.response && msg.payload.response.presences) || {};
-          applyPresenceState(pres);
-          presenceRef++;
-          ws.send(JSON.stringify({
-            topic: "realtime:mongsil-presence",
-            event: "presence",
-            payload: { event: "track", payload: { joined: Date.now() } },
-            ref: String(presenceRef)
-          }));
+          if (Object.keys(pres).length) applyPresenceState(pres);
+          if (!presenceTracked) {
+            presenceTracked = true;
+            presenceRef++;
+            ws.send(JSON.stringify({
+              topic: "realtime:mongsil-presence",
+              event: "presence",
+              payload: { event: "track", payload: { joined: Date.now() } },
+              ref: String(presenceRef)
+            }));
+          }
         } else {
           setPresence(1);
         }
@@ -2820,7 +2839,8 @@
       clearInterval(presenceHb);
       presenceHb = null;
       presenceWs = null;
-      presenceJoined = false;
+      presenceJoinRef = null;
+      presenceTracked = false;
       setPresence(1);
       clearTimeout(presenceRetry);
       presenceRetry = setTimeout(connectPresence, 8000);

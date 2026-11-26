@@ -1021,8 +1021,9 @@
 
   /* ── 작성 카드 확장(스티커·소멸) ─────────────────── */
   .extras { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 9px; }
-  .stickers { display: flex; gap: 5px; }
+  .stickers { display: flex; gap: 5px; flex: 0 0 auto; }
   .sticker {
+    flex: 0 0 30px;
     width: 30px; height: 30px; padding: 0; font-family: inherit; font-size: 15px; line-height: 1;
     border-radius: 10px; background: #FFFBFD; border: 1px solid #F3E4EE; cursor: pointer;
     transition: transform .14s, background .2s, border-color .2s;

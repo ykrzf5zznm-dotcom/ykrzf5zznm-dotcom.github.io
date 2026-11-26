@@ -102,11 +102,8 @@
     letter-spacing: -0.2px; word-break: keep-all;
   }
   .mini-chips {
-    display: flex; gap: 6px; margin-top: 12px; flex-wrap: nowrap;
-    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
+    display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;
   }
-  .mini-chips::-webkit-scrollbar { display: none; }
   .mini { flex: 0 0 auto; }
   .mini {
     font-size: 10.5px; font-weight: 600; color: #7A6484;
@@ -593,6 +590,7 @@
     transition: background .2s, color .2s, border-color .2s, transform .14s;
   }
   .mini-act:active { transform: scale(.95); }
+  .tool-row { display: flex; gap: 6px; margin-top: 8px; }
   .mini-act.on {
     color: #5F7F76;
     background: rgba(226,245,239,.95);
@@ -999,6 +997,27 @@
   .phone.night .help-row span { color: #A99CBF; }
   .phone.night .help-row .hr-tel { color: #F0A6C8; }
   .phone.night .foot-tel { color: #C9BBDC; border-bottom-color: #4A3A60; }
+  .phone.night .sub-meta { color: #B9AECC; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.1); box-shadow: none; }
+  .phone.night .sub-meta b { color: #F0A6C8; }
+  .phone.night .mine-stats span { color: #A99CBF; background: #2A2440; border-color: #3A3352; }
+  .phone.night .mini-link { color: #E9AECB; background: #3A2C4E; border-color: #4A3A60; }
+  .phone.night .mini-link.ghost { color: #B7A9CC; background: #2A2440; border-color: #3A3352; }
+  .phone.night .mini-link.warn { color: #FFB0C3; background: #4A2536; border-color: #6A3048; }
+  .phone.night .seg-btn[aria-pressed="true"] {
+    color: #fff; background: linear-gradient(135deg,#C9739A 0%,#8E74C4 100%);
+  }
+  .phone.night .sort-btn[aria-pressed="true"] {
+    color: #fff; background: linear-gradient(135deg,#C9739A 0%,#8E74C4 100%);
+  }
+  .phone.night .tag[aria-pressed="true"] {
+    color: #fff; background: linear-gradient(135deg,#E48FB2 0%,#A784E8 100%);
+  }
+  .phone.night .fchip[aria-pressed="true"] {
+    color: #fff; background: linear-gradient(135deg,#E48FB2 0%,#A784E8 100%);
+  }
+  .phone.night .echip[aria-pressed="true"] {
+    background: linear-gradient(140deg,#4A3560 0%,#3A3260 100%); border-color: #5A4A78;
+  }
 
   /* ── 작성 카드 확장(스티커·소멸) ─────────────────── */
   .extras { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 9px; }
@@ -1225,6 +1244,8 @@
         <span class="mini">🔒 익명 보장</span>
         <span class="mini">✨ 무료</span>
         <span class="mini">🍃 몽실몽실 쉼터</span>
+      </div>
+      <div class="tool-row">
         <button class="mini mini-act" id="rainBtn" type="button" aria-pressed="false"
                 aria-label="잔잔한 빗소리 켜기">🎧 빗소리</button>
         <button class="mini mini-act" id="themeBtn" type="button" aria-pressed="false"

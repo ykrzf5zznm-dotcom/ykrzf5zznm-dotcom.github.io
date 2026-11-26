@@ -475,6 +475,27 @@
   }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+  .net-banner {
+    display: flex; align-items: center; gap: 9px;
+    margin: 0 14px 10px; padding: 11px 12px;
+    background: rgba(255,255,255,.9); border: 1px solid rgba(238,224,240,.95);
+    border-radius: 16px; box-shadow: 0 8px 20px -16px rgba(160,128,178,.7);
+    font-size: 10.8px; line-height: 1.5; color: #8E7C9A; letter-spacing: -.2px;
+  }
+  .net-banner[hidden] { display: none; }
+  .net-banner .nb-ico { font-size: 15px; line-height: 1; flex: 0 0 auto; }
+  .net-banner .nb-body { min-width: 0; flex: 1; }
+  .net-banner .nb-body b { display: block; font-size: 11px; font-weight: 800; color: #6F5C7E; }
+  .net-banner .nb-body p { margin: 2px 0 0; font-size: 10px; color: #A698B2; word-break: keep-all; }
+  .net-banner.soft { background: rgba(255,247,252,.85); border-style: dashed; }
+  .net-banner.warn { background: #FFF6F8; border-color: #FBE0E9; }
+  .nb-retry {
+    flex: 0 0 auto; font-family: inherit; font-size: 10.5px; font-weight: 700; color: #B0638A;
+    background: #FFF0F6; border: 1px solid #F8DDE9; border-radius: 10px;
+    padding: 7px 10px; cursor: pointer;
+  }
+  .nb-retry:active { transform: translateY(1px); }
+
   /* ── 실제 휴대폰에서는 화면 가득 ─────────────────── */
   @media (max-width: 460px) {
     body { padding: 0; background: #FFF7F1; overflow: hidden; height: 100vh; height: 100dvh; }
@@ -551,8 +572,9 @@
     <section class="feed" aria-label="실시간 공감 피드">
       <div class="feed-head">
         <div class="feed-title"><span class="dot" aria-hidden="true"></span>실시간 공감 피드</div>
-        <div class="feed-live" id="feedLive">지금 3개의 마음이 머물러 있어요</div>
+        <div class="feed-live" id="feedLive">숲을 불러오는 중...</div>
       </div>
+      <div class="net-banner" id="netBanner" hidden></div>
       <div id="feedList"></div>
     </section>
 
@@ -600,62 +622,34 @@
 (function () {
   "use strict";
 
-  /* ── 기본 데이터 ─────────────────────────────────── */
-  var KEY = "mongsilForest.v1";
+  /* ── Supabase 설정 ───────────────────────────────── */
+  var SUPA_URL = "https://vfxawjssbemvxuyduqeu.supabase.co";
+  var SUPA_KEY = "sb_publishable_kdkO4hycffxTqi7rMb_83g_ocmtZpqu";
+  var LS_KEY = "mongsil.sync.v1";
   var MAX = 80;
   var SAY_MAX = 60;
   var ME_NAME = "숲속의 나";
-  var FILTERS = ["전체", "지침", "불안", "막막함", "서운함"];
+  var POLL_MS = 20000;
 
-  var SEED = [
-    {
-      id: "s1", mine: false, name: "익명의 다람쥐", emoji: "🐿️", tone: "rose",
-      time: "3분 전", tags: ["지침"],
-      text: "알바 끝나고 집에 오는 버스에서 자꾸 눈물이 났어. 별일도 아닌데 하루 종일 웃느라 얼굴이 굳은 것 같아서. 엄마한테는 \"오늘 좀 힘들었어\" 한마디도 못 했어. 괜히 걱정시킬까 봐.",
-      hug: 12, me: 8,
-      replies: [
-        { name: "숲속 구름", text: "그 버스에서 혼자 버틴 것만으로도 오늘 진짜 잘한 거예요. 집 가면 아무것도 안 해도 돼요." },
-        { name: "밤의 숲지기", text: "얼굴 굳는 그 느낌 저도 알아요. 도착하면 제일 편한 옷부터 입어요. 그게 시작이에요." },
-        { name: "몽실 23", text: "엄마한테 말 못 한 그 마음도 충분히 이해돼요. 여기다 다 쏟아놓고 가요." }
-      ]
-    },
-    {
-      id: "s2", mine: false, name: "숲속 구름", emoji: "🌙", tone: "lav",
-      time: "11분 전", tags: ["불안"],
-      text: "내일 면접인데 연습한 대답이 자꾸 머리에서 지워져. 떨어지면 나는 뭐가 되는 걸까 싶어서 새벽까지 뒤척였어. 그래도 여기까지 준비한 나한테는 잘했다고 해주고 싶어.",
-      hug: 24, me: 19,
-      replies: [
-        { name: "익명의 다람쥐", text: "떨어져도 당신이 달라지는 건 아니에요. 준비한 시간은 남아요." },
-        { name: "몽실 07", text: "저도 면접 전날엔 늘 그랬어요. 첫 질문만 편하게 말해도 반은 된 거예요. 잘 다녀와요!" }
-      ]
-    },
-    {
-      id: "s3", mine: false, name: "밤의 숲지기", emoji: "🦉", tone: "mint",
-      time: "28분 전", tags: ["막막함"],
-      text: "친구들은 다들 갈 길이 정해진 것처럼 보이는데 나만 제자리에 서 있는 기분. 뭘 좋아하는지도 잘 모르겠어. 이런 나도 언젠가 괜찮아질 수 있을까?",
-      hug: 31, me: 15,
-      replies: [
-        { name: "숲속 구름", text: "스무 살에 다 정해져 있는 사람은 없어요. 저는 서른인데도 다시 찾는 중이에요." }
-      ]
-    }
-  ];
-
-  var FOREST_NAMES = ["익명의 다람쥐", "숲속 구름", "밤의 숲지기", "몽실 07", "숲속 고슴도치"];
-  var FOREST_SAYS = [
-    "그 마음 여기 두고 가요. 오늘 하루 진짜 수고했어요.",
-    "저도 같은 마음이었어요. 혼자 버틴 거 알아요.",
-    "천천히 가도 괜찮아요. 숲은 기다려 줄 거예요.",
-    "한 줄 적어낸 것만으로도 대단한 거예요.",
-    "따뜻한 차 한 잔 하고, 오늘은 조금 일찍 눕기로 해요."
+  var EMOJIS = ["🐿️", "🌙", "🦉", "🫧", "🌿", "🐣", "🍄", "🌼"];
+  var TONES = ["rose", "lav", "mint"];
+  var NICKS = [
+    "익명의 다람쥐", "숲속 구름", "밤의 숲지기", "몽실 07",
+    "숲속 고슴도치", "몽실 23", "새벽 안개", "초록 이끼"
   ];
 
   /* ── 상태 ────────────────────────────────────────── */
-  var state = loadState();
+  var state = { posts: [], reacted: {} };
   var activeTab = "home";
   var activeFilter = "전체";
   var drafts = {};
   var openThreads = {};
   var pendingDrop = null;
+  var submitLock = false;
+  var loading = false;
+  var online = true;
+  var lastSig = "";
+  var booted = false;
 
   var feedList = document.getElementById("feedList");
   var mineList = document.getElementById("mineList");
@@ -667,51 +661,54 @@
   var toastEl = document.getElementById("toast");
   var tabDot = document.getElementById("tabDot");
   var feedLive = document.getElementById("feedLive");
+  var netBanner = document.getElementById("netBanner");
 
-  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  /* ── 내 기기 기억 (내가 쓴 글/한마디, 누른 공감) ──── */
+  var mineIds = loadMine();
 
-  function newId() {
-    return "p" + Date.now().toString(36) + Math.floor(Math.random() * 900 + 100);
-  }
-
-  function normalize(d) {
-    if (!d || !Array.isArray(d.posts)) return null;
-    var out = { v: 1, posts: [], reacted: d.reacted && typeof d.reacted === "object" ? d.reacted : {} };
-    d.posts.forEach(function (p) {
-      if (!p || typeof p !== "object" || typeof p.text !== "string") return;
-      out.posts.push({
-        id: p.id || newId(),
-        mine: !!p.mine,
-        name: p.name || ME_NAME,
-        emoji: p.emoji || "🫧",
-        tone: p.tone || "rose",
-        time: p.time || "",
-        createdAt: p.createdAt || null,
-        tags: Array.isArray(p.tags) && p.tags.length ? p.tags : ["그냥"],
-        text: p.text,
-        hug: typeof p.hug === "number" ? p.hug : 0,
-        me: typeof p.me === "number" ? p.me : 0,
-        replies: Array.isArray(p.replies) ? p.replies.filter(function (r) { return r && typeof r.text === "string"; }).map(function (r) {
-          return { name: r.name || "숲속 누군가", text: r.text, mine: !!r.mine };
-        }) : []
-      });
-    });
-    return out;
-  }
-
-  function loadState() {
+  function loadMine() {
     try {
-      var raw = localStorage.getItem(KEY);
+      var raw = localStorage.getItem(LS_KEY);
       if (raw) {
-        var parsed = normalize(JSON.parse(raw));
-        if (parsed && parsed.posts.length) return parsed;
+        var d = JSON.parse(raw) || {};
+        return {
+          posts: Array.isArray(d.posts) ? d.posts : [],
+          comments: Array.isArray(d.comments) ? d.comments : [],
+          reacted: d.reacted && typeof d.reacted === "object" ? d.reacted : {}
+        };
       }
     } catch (e) {}
-    return { v: 1, posts: clone(SEED), reacted: {} };
+    return { posts: [], comments: [], reacted: {} };
   }
 
-  function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  function saveMine() {
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        posts: mineIds.posts, comments: mineIds.comments, reacted: state.reacted
+      }));
+    } catch (e) {}
+  }
+
+  state.reacted = mineIds.reacted || {};
+
+  /* ── 작은 도구들 ─────────────────────────────────── */
+  function hash(s) {
+    var h = 0;
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+    return Math.abs(h);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function pickNick() {
+    return NICKS[Math.floor(Math.random() * NICKS.length)];
+  }
+
+  function pickEmoji() {
+    return EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
   }
 
   function postById(id) {
@@ -721,9 +718,8 @@
     return null;
   }
 
-  function esc(s) {
-    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  function findCard(id) {
+    return feedList.querySelector('[data-id="' + id + '"]');
   }
 
   var toastTimer = null;
@@ -731,11 +727,12 @@
     toastEl.textContent = msg;
     toastEl.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 2200);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 2400);
   }
 
   function timeAgo(ts) {
     var d = Math.floor((Date.now() - ts) / 1000);
+    if (d < 0) d = 0;
     if (d < 60) return "방금 전";
     if (d < 3600) return Math.floor(d / 60) + "분 전";
     if (d < 86400) return Math.floor(d / 3600) + "시간 전";
@@ -744,11 +741,233 @@
 
   function whenText(p) {
     if (p.createdAt) return timeAgo(p.createdAt);
-    return p.time || "방금 전";
+    return "방금 전";
   }
 
   function isOn(p, kind) {
     return !!(state.reacted[p.id] && state.reacted[p.id][kind]);
+  }
+
+  function excerpt(t) {
+    t = String(t).replace(/\s+/g, " ").trim();
+    return t.length > 46 ? t.slice(0, 46) + "…" : t;
+  }
+
+  /* ── 서버 연결 ───────────────────────────────────── */
+  function sbFetch(path, opts) {
+    opts = opts || {};
+    var headers = { "apikey": SUPA_KEY, "Accept": "application/json" };
+    if (opts.body !== undefined) headers["Content-Type"] = "application/json";
+    if (opts.prefer) headers["Prefer"] = opts.prefer;
+    if (opts.auth) headers["Authorization"] = "Bearer " + SUPA_KEY;
+
+    var init = { method: opts.method || "GET", headers: headers, cache: "no-store" };
+    if (opts.body !== undefined) init.body = JSON.stringify(opts.body);
+
+    return fetch(SUPA_URL + path, init).then(function (res) {
+      return res.text().then(function (t) {
+        var data = null;
+        if (t) { try { data = JSON.parse(t); } catch (e) { data = t; } }
+        if (res.ok) return data;
+
+        /* 키 인증 방식이 다른 환경이면 Authorization을 붙여 한 번만 재시도 */
+        if (res.status === 401 && !opts.auth) {
+          var retry = {};
+          for (var k in opts) retry[k] = opts[k];
+          retry.auth = true;
+          return sbFetch(path, retry);
+        }
+
+        var err = new Error((data && data.message) || ("HTTP " + res.status));
+        err.status = res.status;
+        err.code = data && data.code;
+        err.detail = data;
+        throw err;
+      });
+    });
+  }
+
+  function mapPost(row) {
+    var h = hash(String(row.id || ""));
+    var tags = [];
+    if (Array.isArray(row.tags)) tags = row.tags.filter(function (t) { return typeof t === "string" && t; });
+    else if (typeof row.tags === "string" && row.tags.trim()) tags = [row.tags.trim()];
+    if (!tags.length) tags = ["그냥"];
+    return {
+      id: row.id,
+      mine: mineIds.posts.indexOf(row.id) >= 0,
+      name: row.author_name || "익명의 몽실",
+      emoji: row.author_emoji || EMOJIS[h % EMOJIS.length],
+      tone: TONES[h % TONES.length],
+      createdAt: row.created_at ? Date.parse(row.created_at) : Date.now(),
+      tags: tags,
+      text: row.content || "",
+      hug: Number(row.hug_count || 0),
+      me: Number(row.same_count || 0),
+      replies: []
+    };
+  }
+
+  function mapComment(c) {
+    return {
+      id: c.id,
+      name: c.author_name || "따뜻한 몽실",
+      text: c.content || "",
+      mine: mineIds.comments.indexOf(c.id) >= 0,
+      createdAt: c.created_at ? Date.parse(c.created_at) : Date.now()
+    };
+  }
+
+  function signature(posts) {
+    return posts.map(function (p) {
+      return p.id + ":" + p.hug + ":" + p.me + ":" + p.replies.length + ":" + p.text;
+    }).join("|");
+  }
+
+  function loadFeed(opts) {
+    opts = opts || {};
+    if (loading) return Promise.resolve();
+    loading = true;
+    if (!booted) setNetBanner("loading");
+
+    return Promise.all([
+      sbFetch("/rest/v1/posts?select=*&order=created_at.desc&limit=60"),
+      sbFetch("/rest/v1/comments?select=*&order=created_at.asc&limit=400")
+    ]).then(function (r) {
+      var posts = (Array.isArray(r[0]) ? r[0] : []).map(mapPost);
+      var by = {};
+      (Array.isArray(r[1]) ? r[1] : []).forEach(function (c) {
+        if (!c || !c.post_id) return;
+        (by[c.post_id] = by[c.post_id] || []).push(mapComment(c));
+      });
+      posts.forEach(function (p) { p.replies = by[p.id] || []; });
+
+      var wasOffline = !online;
+      online = true;
+      state.posts = posts;
+      var sig = signature(posts);
+      var changed = sig !== lastSig || wasOffline;
+      lastSig = sig;
+
+      if (changed || !booted) {
+        renderAll();
+      } else {
+        updateTabDot();
+      }
+      booted = true;
+      setNetBanner("ok");
+
+      if (opts.announce && changed) toast("숲의 새 마음을 가져왔어요 🍃");
+    }).catch(function (err) {
+      online = false;
+      setNetBanner("error", err);
+      renderAll();
+      booted = true;
+    }).then(function () {
+      loading = false;
+    });
+  }
+
+  function createPost(content, tags, authorName, authorEmoji) {
+    var body = {
+      content: content,
+      author_name: authorName,
+      author_emoji: authorEmoji,
+      tags: tags
+    };
+    return sbFetch("/rest/v1/posts", {
+      method: "POST", body: body, prefer: "return=representation"
+    }).catch(function (err) {
+      /* tags/author_emoji 컬럼이 없는 스키마면 최소 컬럼으로 한 번 더 */
+      if (err && err.code === "PGRST204") {
+        return sbFetch("/rest/v1/posts", {
+          method: "POST", body: { content: content, author_name: authorName },
+          prefer: "return=representation"
+        });
+      }
+      throw err;
+    });
+  }
+
+  function patchPost(id, body) {
+    return sbFetch("/rest/v1/posts?id=eq." + encodeURIComponent(id), {
+      method: "PATCH", body: body, prefer: "return=minimal"
+    });
+  }
+
+  function removePost(id) {
+    return sbFetch("/rest/v1/posts?id=eq." + encodeURIComponent(id), {
+      method: "DELETE", prefer: "return=minimal"
+    });
+  }
+
+  function createComment(postId, content, authorName) {
+    return sbFetch("/rest/v1/comments", {
+      method: "POST",
+      body: { post_id: postId, content: content, author_name: authorName },
+      prefer: "return=representation"
+    });
+  }
+
+  /* 저장은 됐는데 응답 본문이 비어 오는 경우(RLS가 RETURNING을 막는 경우 등)
+     최신 글에서 같은 내용을 한 번 더 찾아봅니다. */
+  function findNewPost(content) {
+    return sbFetch("/rest/v1/posts?select=*&order=created_at.desc&limit=5").then(function (rows) {
+      var list = Array.isArray(rows) ? rows : [];
+      for (var i = 0; i < list.length; i++) {
+        if (list[i] && list[i].content === content) return list[i];
+      }
+      return null;
+    });
+  }
+
+  function findNewComment(postId, content) {
+    return sbFetch("/rest/v1/comments?select=*&post_id=eq." + encodeURIComponent(postId) +
+      "&order=created_at.desc&limit=5").then(function (rows) {
+      var list = Array.isArray(rows) ? rows : [];
+      for (var i = 0; i < list.length; i++) {
+        if (list[i] && list[i].content === content) return list[i];
+      }
+      return null;
+    });
+  }
+
+  function describeError(err) {
+    if (err && (err.code === "PGRST205" || err.status === 404)) {
+      return {
+        title: "숲의 자리를 아직 준비 중이에요",
+        sub: "서버 테이블이 만들어지면 자동으로 연결돼요."
+      };
+    }
+    if (err && err.status === 401) {
+      return { title: "숲의 열쇠가 잠시 맞지 않아요", sub: "잠시 후 다시 연결해 볼게요." };
+    }
+    return {
+      title: "숲이 지금 잠시 연결을 기다리고 있어요",
+      sub: "인터넷 연결을 확인한 뒤 다시 시도해 주세요."
+    };
+  }
+
+  function setNetBanner(mode, err) {
+    if (!netBanner) return;
+    if (mode === "ok") {
+      netBanner.hidden = true;
+      netBanner.className = "net-banner";
+      netBanner.innerHTML = "";
+      return;
+    }
+    netBanner.hidden = false;
+    if (mode === "loading") {
+      netBanner.className = "net-banner soft";
+      netBanner.innerHTML = '<span class="nb-ico" aria-hidden="true">🫧</span>' +
+        '<div class="nb-body"><b>숲을 불러오는 중이에요</b></div>';
+      return;
+    }
+    var d = describeError(err);
+    netBanner.className = "net-banner warn";
+    netBanner.innerHTML = '<span class="nb-ico" aria-hidden="true">🍃</span>' +
+      '<div class="nb-body"><b>' + esc(d.title) + "</b><p>" + esc(d.sub) + "</p></div>" +
+      '<button type="button" class="nb-retry" data-retry="1">다시 연결</button>';
   }
 
   /* ── 카드 렌더 ───────────────────────────────────── */
@@ -763,7 +982,8 @@
 
   function threadHTML(p, open) {
     var bubbles = p.replies.map(function (r) {
-      return '<div class="bubble' + (r.mine ? " mine" : "") + '"><b>' + esc(r.name) + "</b><p>" + esc(r.text) + "</p></div>";
+      return '<div class="bubble' + (r.mine ? " mine" : "") + '"><b>' + esc(r.name) +
+        "</b><p>" + esc(r.text) + "</p></div>";
     }).join("");
     var dv = drafts[p.id] ? esc(drafts[p.id]) : "";
     return '<div class="thread' + (open ? " open" : "") + '">' + bubbles +
@@ -802,6 +1022,8 @@
   }
 
   function setFeedLive(n) {
+    if (!booted) { feedLive.textContent = "숲을 불러오는 중..."; return; }
+    if (!online) { feedLive.textContent = "연결을 기다리는 중"; return; }
     if (activeFilter === "전체") {
       feedLive.textContent = "지금 " + state.posts.length + "개의 마음이 머물러 있어요";
     } else {
@@ -809,16 +1031,33 @@
     }
   }
 
+  function emptyHTML() {
+    if (!online) {
+      return '<div class="big-empty">' +
+        '<div class="empty-emoji">🌫️</div>' +
+        "<b>숲이 잠시 연결을 기다리고 있어요</b>" +
+        "<p>인터넷이 연결되면 다른 사람들의 마음이 다시 보여요.</p>" +
+        '<button class="empty-btn" type="button" data-retry="1">🍃 다시 연결하기</button>' +
+        "</div>";
+    }
+    return '<div class="big-empty">' +
+      '<div class="empty-emoji">🍃</div>' +
+      "<b>아직 숲이 조용해요</b>" +
+      "<p>지금 이 숲에 머문 마음이 없어요.<br>첫 번째 마음을 조용히 남겨보세요.</p>" +
+      "</div>";
+  }
+
   function renderHome() {
     var arr = filteredPosts();
     setFeedLive(arr.length);
     if (!arr.length) {
-      feedList.innerHTML =
-        '<div class="big-empty">' +
-          '<div class="empty-emoji">🍃</div>' +
-          "<b>아직 이 감정의 마음은 없어요</b>" +
-          "<p>숲이 조용하네요. 지금 그 마음이 있다면, 첫 번째로 적어봐도 괜찮아요.</p>" +
-        "</div>";
+      feedList.innerHTML = activeFilter === "전체"
+        ? emptyHTML()
+        : '<div class="big-empty">' +
+            '<div class="empty-emoji">🍃</div>' +
+            "<b>아직 이 감정의 마음은 없어요</b>" +
+            "<p>숲이 조용하네요. 지금 그 마음이 있다면, 첫 번째로 적어봐도 괜찮아요.</p>" +
+          "</div>";
       return;
     }
     feedList.innerHTML = arr.map(cardHTML).join("");
@@ -835,7 +1074,7 @@
           "<p>지금 마음 한 줄을 적어 숲에 심어보세요.<br>아무도 이름을 묻지 않아요.</p>" +
           '<button class="empty-btn" type="button" data-goto="home">🫧 마음 심으러 가기</button>' +
         "</div>" +
-        '<p class="footnote">심은 마음은 이 기기에만 저장돼요.</p>';
+        '<p class="footnote">심은 마음은 숲에 익명으로 올라가요.</p>';
       return;
     }
     mineList.innerHTML = mine.map(function (p) {
@@ -860,7 +1099,7 @@
         "</div>" +
         "</article>";
     }).join("") +
-      '<p class="footnote">심은 마음은 이 기기에만 저장돼요.</p>';
+      '<p class="footnote">심은 마음은 숲에 익명으로 올라가요.</p>';
   }
 
   /* ── 받은 마음 ───────────────────────────────────── */
@@ -887,11 +1126,6 @@
       });
     });
     return { hug: hug, me: me, says: says, total: hug + me, mine: mine, comments: comments, given: given, givenSays: givenSays };
-  }
-
-  function excerpt(t) {
-    t = String(t).replace(/\s+/g, " ").trim();
-    return t.length > 46 ? t.slice(0, 46) + "…" : t;
   }
 
   function renderHearts() {
@@ -924,7 +1158,6 @@
         "</div>";
     }
 
-    /* 내 글에 달린 한마디 */
     html += '<div class="sec-head"><span class="sec-ico" aria-hidden="true">💌</span>내 글에 달린 따뜻한 한마디<span class="sec-n">' + s.says + "</span></div>";
     if (s.comments.length) {
       s.comments.slice().reverse().forEach(function (c) {
@@ -935,10 +1168,9 @@
           "</div>";
       });
     } else {
-      html += '<div class="small-empty"><span aria-hidden="true">💬</span>아직 내 글에 한마디가 없어요.<br>조금만 기다리면 숲속 친구들이 말을 걸어올 거예요.</div>';
+      html += '<div class="small-empty"><span aria-hidden="true">💬</span>아직 내 글에 한마디가 없어요.<br>숲속의 누군가가 마음을 보고 한마디 남겨줄 거예요.</div>';
     }
 
-    /* 내가 누른 공감 */
     html += '<div class="sec-head"><span class="sec-ico" aria-hidden="true">🤍</span>내가 누른 공감<span class="sec-n">' + s.given.length + "</span></div>";
     if (s.given.length) {
       s.given.forEach(function (g) {
@@ -952,7 +1184,6 @@
       html += '<div class="small-empty"><span aria-hidden="true">🍃</span>아직 누른 공감이 없어요.<br>홈에서 마음에 토닥토닥을 눌러보세요.</div>';
     }
 
-    /* 내가 건넨 한마디 */
     html += '<div class="sec-head"><span class="sec-ico" aria-hidden="true">✍️</span>내가 건넨 한마디<span class="sec-n">' + s.givenSays.length + "</span></div>";
     if (s.givenSays.length) {
       s.givenSays.slice().reverse().forEach(function (g) {
@@ -966,7 +1197,7 @@
       html += '<div class="small-empty"><span aria-hidden="true">🕊️</span>아직 건넨 한마디가 없어요.<br>누군가의 마음에 따뜻한 한마디를 남겨보세요.</div>';
     }
 
-    html += '<p class="footnote">심은 마음과 받은 마음은 이 기기에만 저장돼요.<br>지금은 데모 버전이라, 내가 쓴 글에 오는 반응이 숲속 친구들이 보낸 것처럼 자동으로 도착해요.</p>';
+    html += '<p class="footnote">내가 심은 마음과 받은 마음은 이 기기에서 기억해 보여드려요.<br>글과 한마디는 숲(서버)에 익명으로 함께 머물러요.</p>';
     heartsBody.innerHTML = html;
   }
 
@@ -974,6 +1205,13 @@
     var s = receivedStats();
     if (s.total + s.says > 0) tabDot.classList.add("show");
     else tabDot.classList.remove("show");
+  }
+
+  function renderAll() {
+    renderHome();
+    renderMine();
+    renderHearts();
+    updateTabDot();
   }
 
   function refreshCurrent() {
@@ -1051,22 +1289,40 @@
   function toggleReact(p, card, btn) {
     var kind = btn.dataset.kind;
     var on = btn.dataset.on === "1";
+    var col = kind === "hug" ? "hug_count" : "same_count";
+    var prev = p[kind];
+    var next = Math.max(0, prev + (on ? -1 : 1));
+
+    p[kind] = next;
     state.reacted[p.id] = state.reacted[p.id] || {};
-    if (on) {
-      p[kind] = Math.max(0, p[kind] - 1);
-      delete state.reacted[p.id][kind];
-    } else {
-      p[kind] = p[kind] + 1;
-      state.reacted[p.id][kind] = true;
-    }
+    if (on) delete state.reacted[p.id][kind];
+    else state.reacted[p.id][kind] = true;
     if (!Object.keys(state.reacted[p.id]).length) delete state.reacted[p.id];
-    paintReact(btn, kind, p[kind], !on);
-    save();
+    paintReact(btn, kind, next, !on);
+    saveMine();
     updateTabDot();
     if (!on) {
       if (kind === "hug") toast("마음이 따뜻해졌어요 🤍");
       else toast("혼자가 아니에요 🫂");
     }
+
+    var body = {};
+    body[col] = next;
+    patchPost(p.id, body).then(function () {
+      refreshCurrent();
+    }).catch(function () {
+      p[kind] = prev;
+      if (on) {
+        state.reacted[p.id] = state.reacted[p.id] || {};
+        state.reacted[p.id][kind] = true;
+      } else if (state.reacted[p.id]) {
+        delete state.reacted[p.id][kind];
+        if (!Object.keys(state.reacted[p.id]).length) delete state.reacted[p.id];
+      }
+      saveMine();
+      paintReact(btn, kind, prev, on);
+      toast("잠시 후 다시 눌러주세요 🍃");
+    });
   }
 
   function toggleThread(p, card, btn) {
@@ -1093,29 +1349,62 @@
     if (!input) return;
     var v = input.value.trim();
     if (!v) { try { input.focus(); } catch (e) {} return; }
-    p.replies.push({ name: ME_NAME, text: v, mine: true });
-    delete drafts[p.id];
-    input.value = "";
-    var thread = card.querySelector(".thread");
-    var b = document.createElement("div");
-    b.className = "bubble mine";
-    b.innerHTML = "<b>" + esc(ME_NAME) + "</b><p>" + esc(v) + "</p>";
-    var row = thread.querySelector(".say-row");
-    thread.insertBefore(b, row);
-    thread.classList.add("open");
-    openThreads[p.id] = true;
-    var sayBtn = card.querySelector('[data-kind="say"]');
-    if (sayBtn) {
-      sayBtn.querySelector(".n").textContent = p.replies.length;
-      sayBtn.dataset.on = "1";
-      sayBtn.setAttribute("aria-pressed", "true");
-      sayBtn.setAttribute("aria-label", "따뜻한 한마디 " + p.replies.length + "개");
-    }
-    save();
-    refreshCurrent();
-    updateTabDot();
-    toast("따뜻한 한마디를 남겼어요 🤍");
+    if (input.disabled) return;
+    input.disabled = true;
+
+    createComment(p.id, v, pickNick()).then(function (rows) {
+      var row = rows && rows[0];
+      if (row && row.id) return row;
+      return findNewComment(p.id, v);
+    }).then(function (row) {
+      if (!row || !row.id) throw new Error("saved-but-empty");
+      mineIds.comments.push(row.id);
+      var c = mapComment(row);
+      c.mine = true;
+      p.replies.push(c);
+      delete drafts[p.id];
+      saveMine();
+      input.value = "";
+      input.disabled = false;
+
+      var thread = card.querySelector(".thread");
+      var b = document.createElement("div");
+      b.className = "bubble mine";
+      b.innerHTML = "<b>" + esc(c.name) + "</b><p>" + esc(c.text) + "</p>";
+      var rowEl = thread.querySelector(".say-row");
+      if (rowEl) thread.insertBefore(b, rowEl);
+      thread.classList.add("open");
+      openThreads[p.id] = true;
+
+      var sayBtn = card.querySelector('[data-kind="say"]');
+      if (sayBtn) {
+        var n = sayBtn.querySelector(".n");
+        if (n) n.textContent = p.replies.length;
+        sayBtn.dataset.on = "1";
+        sayBtn.setAttribute("aria-pressed", "true");
+        sayBtn.setAttribute("aria-label", "따뜻한 한마디 " + p.replies.length + "개");
+      }
+      refreshCurrent();
+      updateTabDot();
+      toast("따뜻한 한마디를 남겼어요 🤍");
+    }).catch(function (err) {
+      input.disabled = false;
+      if (err && (err.code === "PGRST205" || err.status === 404)) {
+        online = false;
+        setNetBanner("error", err);
+        renderHome();
+      }
+      toast("지금은 한마디를 남길 수 없어요. 잠시 후 다시 시도해 주세요.");
+    });
   }
+
+  /* 연결 재시도 (배너·빈 상태 버튼 공통) */
+  document.addEventListener("click", function (e) {
+    var r = e.target.closest("[data-retry]");
+    if (!r) return;
+    e.preventDefault();
+    loadFeed({ announce: false });
+  });
 
   feedList.addEventListener("click", function (e) {
     var btn = e.target.closest("button");
@@ -1151,6 +1440,7 @@
     if (!btn) return;
     var p = postById(btn.dataset.id);
     if (!p) return;
+
     if (btn.dataset.confirm !== "1") {
       btn.dataset.confirm = "1";
       btn.textContent = "정말 내릴까요?";
@@ -1168,23 +1458,34 @@
       }, 6000);
       return;
     }
+
     pendingDrop = null;
-    state.posts = state.posts.filter(function (x) { return x.id !== p.id; });
-    delete state.reacted[p.id];
-    delete drafts[p.id];
-    delete openThreads[p.id];
-    save();
-    renderMine();
-    renderHome();
-    updateTabDot();
-    toast("마음을 숲에서 조용히 내렸어요 🌿");
+    btn.disabled = true;
+    btn.textContent = "내리는 중...";
+
+    removePost(p.id).then(function () {
+      state.posts = state.posts.filter(function (x) { return x.id !== p.id; });
+      mineIds.posts = mineIds.posts.filter(function (id) { return id !== p.id; });
+      delete state.reacted[p.id];
+      delete drafts[p.id];
+      delete openThreads[p.id];
+      saveMine();
+      renderAll();
+      toast("마음을 숲에서 조용히 내렸어요 🌿");
+    }).catch(function () {
+      btn.disabled = false;
+      btn.dataset.confirm = "0";
+      btn.textContent = "🌿 내리기";
+      btn.classList.remove("warn");
+      toast("지금은 내릴 수 없어요. 잠시 후 다시 시도해 주세요.");
+    });
   });
 
   /* ── 작성 ────────────────────────────────────────── */
   function syncCompose() {
     var n = textEl.value.length;
     counterEl.textContent = n + " / " + MAX;
-    submitEl.disabled = textEl.value.trim().length === 0;
+    submitEl.disabled = submitLock || textEl.value.trim().length === 0;
     textEl.style.height = "auto";
     textEl.style.height = Math.min(140, Math.max(66, textEl.scrollHeight)) + "px";
   }
@@ -1211,85 +1512,58 @@
     syncCompose();
   }
 
+  function highlight(id) {
+    var el = findCard(id);
+    if (!el) return;
+    el.classList.add("fresh");
+    setTimeout(function () {
+      try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {}
+    }, 120);
+    setTimeout(function () { el.classList.remove("fresh"); }, 1800);
+  }
+
   submitEl.addEventListener("click", function () {
     var v = textEl.value.trim();
-    if (!v) return;
-    var picked = pickedTags();
-    var p = {
-      id: newId(), mine: true, name: ME_NAME, emoji: "🫧", tone: "rose",
-      time: "", createdAt: Date.now(),
-      tags: picked.length ? picked : ["그냥"],
-      text: v, hug: 0, me: 0, replies: []
-    };
-    state.posts.unshift(p);
-    activeFilter = "전체";
-    syncFilterChips();
-    save();
-    renderHome();
-    clearCompose();
-    updateTabDot();
+    if (!v || submitLock) return;
+    var tags = pickedTags();
+    if (!tags.length) tags = ["그냥"];
 
-    var el = feedList.querySelector('[data-id="' + p.id + '"]');
-    if (el) {
-      el.classList.add("fresh");
-      setTimeout(function () {
-        try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {}
-      }, 120);
-      setTimeout(function () { el.classList.remove("fresh"); }, 1800);
-    }
-    toast("마음이 숲에 잘 심어졌어요 🫧");
-    scheduleForestReplies(p);
-  });
+    submitLock = true;
+    submitEl.disabled = true;
+    submitEl.textContent = "숲에 심는 중...";
 
-  /* ── 데모: 숲속 친구들의 반응 ────────────────────── */
-  function findCard(id) {
-    return feedList.querySelector('[data-id="' + id + '"]');
-  }
+    createPost(v, tags, pickNick(), pickEmoji()).then(function (rows) {
+      var row = rows && rows[0];
+      if (row && row.id) return row;
+      return findNewPost(v);
+    }).then(function (row) {
+      if (!row || !row.id) throw new Error("saved-but-empty");
+      mineIds.posts.push(row.id);
+      saveMine();
 
-  function forestHug(p, kind, name) {
-    if (!postById(p.id)) return;
-    p[kind] = p[kind] + 1;
-    save();
-    var card = findCard(p.id);
-    if (card) {
-      var btn = card.querySelector('[data-kind="' + kind + '"]');
-      if (btn) paintReact(btn, kind, p[kind], btn.dataset.on === "1");
-    }
-    refreshCurrent();
-    updateTabDot();
-    toast(name + " 님이 " + (kind === "hug" ? "토닥였어요 🤍" : "나도 그래 했어요 🫂"));
-  }
-
-  function forestSay(p) {
-    if (!postById(p.id)) return;
-    var name = FOREST_NAMES[Math.floor(Math.random() * FOREST_NAMES.length)];
-    var text = FOREST_SAYS[Math.floor(Math.random() * FOREST_SAYS.length)];
-    p.replies.push({ name: name, text: text, mine: false });
-    save();
-    var card = findCard(p.id);
-    if (card) {
-      var thread = card.querySelector(".thread");
-      var b = document.createElement("div");
-      b.className = "bubble";
-      b.innerHTML = "<b>" + esc(name) + "</b><p>" + esc(text) + "</p>";
-      var row = thread.querySelector(".say-row");
-      if (row) thread.insertBefore(b, row);
-      var sayBtn = card.querySelector('[data-kind="say"]');
-      if (sayBtn) {
-        sayBtn.querySelector(".n").textContent = p.replies.length;
-        sayBtn.setAttribute("aria-label", "따뜻한 한마디 " + p.replies.length + "개");
+      var mapped = mapPost(row);
+      mapped.mine = true;
+      state.posts.unshift(mapped);
+      activeFilter = "전체";
+      syncFilterChips();
+      renderAll();
+      clearCompose();
+      lastSig = signature(state.posts);
+      highlight(mapped.id);
+      toast("마음이 숲에 잘 심어졌어요 🫧");
+    }).catch(function (err) {
+      if (err && (err.code === "PGRST205" || err.status === 404)) {
+        online = false;
+        setNetBanner("error", err);
+        renderHome();
       }
-    }
-    refreshCurrent();
-    updateTabDot();
-    toast("💌 " + name + " 님이 한마디를 남겼어요");
-  }
-
-  function scheduleForestReplies(p) {
-    setTimeout(function () { forestHug(p, "hug", "익명의 다람쥐"); }, 3200);
-    setTimeout(function () { forestHug(p, "me", "숲속 구름"); }, 6400);
-    setTimeout(function () { forestSay(p); }, 9600);
-  }
+      toast("숲이 지금 잠시 쉬는 중이에요. 잠시 후 다시 심어주세요.");
+    }).then(function () {
+      submitLock = false;
+      submitEl.textContent = "익명으로 털어놓기";
+      syncCompose();
+    });
+  });
 
   /* ── 탭 / 이동 버튼 ──────────────────────────────── */
   document.querySelectorAll(".tab").forEach(function (t) {
@@ -1321,26 +1595,39 @@
     }
   });
 
-  /* ── 첫 렌더 ─────────────────────────────────────── */
+  /* ── 첫 렌더 & 주기적 동기화 ─────────────────────── */
   renderHome();
   renderMine();
   renderHearts();
   syncCompose();
   updateTabDot();
+  setNetBanner("loading");
 
-  // 로드 시각 기준으로 "방금 전" 등이 자연스럽게 갱신되도록
+  loadFeed({ announce: false });
+
   setInterval(function () {
-    if (activeTab === "home" || activeTab === "mine") {
-      var mineCards = document.querySelectorAll('[data-id^="p"] .who small');
-      if (mineCards.length) {
-        Array.prototype.forEach.call(mineCards, function (el) {
-          var card = el.closest(".card");
-          if (!card) return;
-          var p = postById(card.dataset.id);
-          if (p && p.createdAt) el.textContent = timeAgo(p.createdAt);
-        });
-      }
-    }
+    if (document.hidden) return;
+    if (activeTab !== "home" && activeTab !== "hearts") return;
+    var f = document.activeElement;
+    if (f && f.classList && f.classList.contains("say-input")) return;  /* 입력 중에는 잠시 쉼 */
+    loadFeed({ announce: false });
+  }, POLL_MS);
+
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) loadFeed({ announce: false });
+  });
+  window.addEventListener("online", function () { loadFeed({ announce: false }); });
+
+  /* 시간 표시 자연스럽게 갱신 */
+  setInterval(function () {
+    if (activeTab !== "home" && activeTab !== "mine") return;
+    var cards = document.querySelectorAll("#feedList .card, #mineList .card");
+    Array.prototype.forEach.call(cards, function (card) {
+      var p = postById(card.dataset.id);
+      if (!p) return;
+      var el = card.querySelector(".who small");
+      if (el) el.textContent = whenText(p);
+    });
   }, 60000);
 })();
 </script>

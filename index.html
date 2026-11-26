@@ -1594,10 +1594,8 @@
   }
   .draw-canvas[hidden] { display: none; }
   .ctabs {
-    display: flex; gap: 4px; margin: 4px 0 2px; padding: 2px 1px;
-    overflow-x: auto; scrollbar-width: none;
+    display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 2px; padding: 2px 1px;
   }
-  .ctabs::-webkit-scrollbar { display: none; }
   .ctab {
     flex: 0 0 auto; font-family: inherit; font-size: 10.5px; font-weight: 800;
     color: #A08FB0; background: #FBF5FB; border: 1px solid #F1E4EF;
@@ -1686,6 +1684,64 @@
     padding: 12px 11px; cursor: pointer;
   }
 
+  /* 글꼴별 크기 보정 (손글씨체·명조체는 x-height가 작아 본문을 살짝 키움) */
+  body[data-font="hand"] .brand-name { font-size: 28px; }
+  body[data-font="hand"] .tagline { font-size: 15px; }
+  body[data-font="hand"] .mini { font-size: 12px; }
+  body[data-font="hand"] .me-chip { font-size: 12.5px; }
+  body[data-font="hand"] .me-chip-mini { font-size: 11px; }
+  body[data-font="hand"] .feed-title { font-size: 16px; }
+  body[data-font="hand"] .feed-live, body[data-font="hand"] .sort-count { font-size: 11.5px; }
+  body[data-font="hand"] .card-text { font-size: 16px; line-height: 1.62; }
+  body[data-font="hand"] .who b { font-size: 14.5px; }
+  body[data-font="hand"] .who small { font-size: 12px; }
+  body[data-font="hand"] .card-tag { font-size: 12px; }
+  body[data-font="hand"] .react { font-size: 13px; }
+  body[data-font="hand"] .bubble b { font-size: 12px; }
+  body[data-font="hand"] .bubble p { font-size: 14.5px; }
+  body[data-font="hand"] .say-row input { font-size: 14px; }
+  body[data-font="hand"] .say-row button { font-size: 12.5px; }
+  body[data-font="hand"] textarea { font-size: 15.5px; }
+  body[data-font="hand"] .compose-label { font-size: 14px; }
+  body[data-font="hand"] .compose-sub, body[data-font="hand"] .compose-note,
+  body[data-font="hand"] .footnote { font-size: 11px; }
+  body[data-font="hand"] .tag { font-size: 13.5px; }
+  body[data-font="hand"] .fchip { font-size: 13px; }
+  body[data-font="hand"] .sort-btn { font-size: 12px; }
+  body[data-font="hand"] .submit { font-size: 16px; }
+  body[data-font="hand"] .daily-body b { font-size: 11px; }
+  body[data-font="hand"] .daily-body p { font-size: 13.5px; }
+  body[data-font="hand"] .wish-btn { font-size: 11px; }
+  body[data-font="hand"] .burn { font-size: 11px; }
+  body[data-font="hand"] .sec-head { font-size: 15px; }
+  body[data-font="hand"] .stat-big { font-size: 44px; }
+  body[data-font="hand"] .stat-label { font-size: 13px; }
+  body[data-font="hand"] .stat-cell b { font-size: 17px; }
+  body[data-font="hand"] .stat-note, body[data-font="hand"] .garden-sub { font-size: 12px; }
+  body[data-font="hand"] .garden-name { font-size: 15px; }
+  body[data-font="hand"] .cc-body b { font-size: 14px; }
+  body[data-font="hand"] .cc-body p { font-size: 11px; }
+  body[data-font="hand"] .cc-btn { font-size: 11px; }
+  body[data-font="hand"] .sheet-title { font-size: 22px; }
+  body[data-font="hand"] .sheet-sub { font-size: 13.5px; }
+  body[data-font="hand"] .deco-title { font-size: 21px; }
+  body[data-font="hand"] .deco-sub { font-size: 13px; }
+  body[data-font="hand"] .deco-label { font-size: 12px; }
+  body[data-font="hand"] .theme-opt { font-size: 12.5px; }
+  body[data-font="hand"] .font-opt b { font-size: 12.5px; }
+  body[data-font="hand"] .font-opt span { font-size: 14.5px; }
+  body[data-font="hand"] .closet-title { font-size: 20px; }
+  body[data-font="hand"] .closet-sub { font-size: 12px; }
+  body[data-font="hand"] .ctab { font-size: 12px; }
+  body[data-font="hand"] .copt small { font-size: 9.5px; }
+  body[data-font="hand"] .cta-save { font-size: 14px; }
+  body[data-font="hand"] .cta-reset, body[data-font="hand"] .dtool { font-size: 11px; }
+  body[data-font="hand"] .tab { font-size: 10.5px; }
+  body[data-font="myeongjo"] .card-text { font-size: 14px; }
+  body[data-font="myeongjo"] textarea { font-size: 14.2px; }
+  body[data-font="myeongjo"] .bubble p { font-size: 13px; }
+  body[data-font="myeongjo"] .who b { font-size: 13px; }
+
   /* 야간용 새 화면 */
   .phone.night .charcard { background: linear-gradient(150deg, rgba(46,39,72,.92) 0%, rgba(38,33,60,.92) 100%); border-color: rgba(255,255,255,.09); }
   .phone.night .charcard b { color: #EDE4F8; }
@@ -1749,7 +1805,7 @@
         <button class="mini mini-act" id="helpBtn" type="button" aria-label="긴급 도움 연결">🆘 도움</button>
         <button class="mini mini-act" id="decoBtn" type="button" aria-label="테마와 글꼴 꾸미기">🎨 꾸미기</button>
         <button class="mini mini-act avatar-chip" id="avatarChip" type="button" aria-label="내 캐릭터 옷장 열기">
-          <span class="ac-av" aria-hidden="true"></span>내 캐릭터
+          <span class="ac-av" aria-hidden="true"></span>옷장
         </button>
       </div>
       <button class="me-chip" type="button" data-me="1" aria-label="내 닉네임 바꾸기">
@@ -3583,6 +3639,7 @@
 
   /* ── 꾸미기: 테마 & 글꼴 ─────────────────────────── */
   var THEME_KEY = "mongsil.theme.v1";
+  var LIGHT_KEY = "mongsil.theme.light.v1";
   var FONT_KEY = "mongsil.font.v1";
 
   var THEMES = [
@@ -3641,6 +3698,7 @@
         id === "peach" ? "#FFF2E8" : id === "matcha" ? "#F3F8EC" : "#FFF3F7");
     }
     try { localStorage.setItem(THEME_KEY, id); } catch (e) {}
+    if (id !== "night") { try { localStorage.setItem(LIGHT_KEY, id); } catch (e) {} }
     paintDecoOptions();
   }
 
@@ -3700,6 +3758,7 @@
     var v = "cloud";
     try { v = localStorage.getItem(THEME_KEY) || "cloud"; } catch (e) {}
     if (v === "day") v = "cloud";
+    try { lightTheme = localStorage.getItem(LIGHT_KEY) || "cloud"; } catch (e) {}
     applyTheme(v);
     var f = "basic";
     try { f = localStorage.getItem(FONT_KEY) || "basic"; } catch (e) {}
@@ -4580,6 +4639,7 @@
       var t1 = "#C9A98C", t2 = "#A8876A", t3 = "#E3CBB4";
       return sleeve(22, t1, t2, -14) + sleeve(98, t1, t2, 14) +
         '<path d="M32 82 C32 76 46 74 60 74 C74 74 88 76 88 82 L92 123 C92 129 76 132 60 132 C44 132 28 129 28 123 Z" fill="' + t1 + '" stroke="' + t2 + '" stroke-width="1.8"/>' +
+        '<path d="M52 75 L60 88 L68 75 Z" fill="' + b.fill + '"/>' +
         '<path d="M60 75 L51 91 L57 100 L60 89 Z" fill="' + t3 + '"/>' +
         '<path d="M60 75 L69 91 L63 100 L60 89 Z" fill="' + t3 + '"/>' +
         '<path d="M60 89 V132" stroke="' + t2 + '" stroke-width="1.6"/>' +
@@ -4606,9 +4666,10 @@
 
   /* ── 장신구 ────────────────────────────────────── */
   function wingsSVG() {
-    return '<path d="M30 76 C10 66 0 88 10 106 C15 96 21 90 30 88 Z" fill="#FDFBFF" stroke="#E1D3F2" stroke-width="1.4"/>' +
-      '<path d="M90 76 C110 66 120 88 110 106 C105 96 99 90 90 88 Z" fill="#FDFBFF" stroke="#E1D3F2" stroke-width="1.4"/>' +
-      '<path d="M22 84 Q16 94 18 101 M98 84 Q104 94 102 101" stroke="#E1D3F2" stroke-width="1.2" fill="none"/>';
+    return '<path d="M30 76 C10 66 0 88 10 106 C15 96 21 90 30 88 Z" fill="#F6F0FF" stroke="#C9B6E6" stroke-width="1.6"/>' +
+      '<path d="M90 76 C110 66 120 88 110 106 C105 96 99 90 90 88 Z" fill="#F6F0FF" stroke="#C9B6E6" stroke-width="1.6"/>' +
+      '<path d="M22 84 Q16 94 18 101 M98 84 Q104 94 102 101" stroke="#CDBBE8" stroke-width="1.3" fill="none"/>' +
+      '<path d="M26 92 Q21 101 23 106 M94 92 Q99 101 97 106" stroke="#DCCFF0" stroke-width="1.2" fill="none"/>';
   }
 
   function accSVG(id, b) {
@@ -4770,7 +4831,7 @@
   }
 
   function previewBox() {
-    if (cat === "face") return "30 22 60 75";
+    if (cat === "face") return "34 30 52 65";
     if (cat === "acc") return "6 0 108 135";
     if (cat === "shoes") return "26 96 68 85";
     return "0 0 120 150";

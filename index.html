@@ -496,6 +496,234 @@
   }
   .nb-retry:active { transform: translateY(1px); }
 
+  /* ── 오늘의 따뜻한 한마디 ─────────────────────────── */
+  .daily {
+    position: relative; z-index: 2;
+    display: flex; align-items: flex-start; gap: 9px;
+    margin: 12px 15px 0; padding: 12px 13px;
+    background: linear-gradient(120deg, rgba(255,255,255,.92) 0%, rgba(255,246,251,.9) 55%, rgba(240,244,255,.9) 100%);
+    border: 1px solid rgba(255,255,255,.98); border-radius: 18px;
+    box-shadow: 0 10px 24px -16px rgba(170,135,190,.75);
+  }
+  .daily-ico { font-size: 15px; line-height: 1.35; flex: 0 0 auto; opacity: .9; }
+  .daily-body { min-width: 0; }
+  .daily-body b {
+    display: block; font-size: 9.5px; font-weight: 800; color: #C1749C;
+    letter-spacing: -0.1px; margin-bottom: 3px;
+  }
+  .daily-body p {
+    margin: 0; font-size: 11.8px; line-height: 1.62; color: #6B5A78;
+    letter-spacing: -0.2px; word-break: keep-all;
+  }
+
+  /* ── 정렬 토글 ─────────────────────────────────────── */
+  .sortbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 15px 4px;
+  }
+  .sort-count { font-size: 10px; color: #B3A5BC; font-weight: 600; }
+  .sort-toggle {
+    margin-left: auto; display: flex; gap: 3px; padding: 3px;
+    background: rgba(255,255,255,.72); border: 1px solid #F4E7F0; border-radius: 999px;
+    box-shadow: 0 3px 9px -4px rgba(180,150,195,.55);
+  }
+  .sort-btn {
+    font-family: inherit; font-size: 10.5px; font-weight: 700; color: #9A87A5;
+    background: none; border: 0; border-radius: 999px; padding: 5px 10px;
+    cursor: pointer; white-space: nowrap; transition: background .2s, color .2s, box-shadow .2s;
+  }
+  .sort-btn[aria-pressed="true"] {
+    color: #fff;
+    background: linear-gradient(135deg,#F79FC0 0%,#C3A4F0 100%);
+    box-shadow: 0 4px 10px -4px rgba(226,150,196,.85);
+  }
+
+  /* ── 신고·숨기기 ─────────────────────────────────── */
+  .card { position: relative; }
+  .more-btn {
+    flex: 0 0 auto; width: 24px; height: 24px; padding: 0;
+    display: grid; place-items: center;
+    font-family: inherit; font-size: 13px; font-weight: 800; line-height: 1; color: #B9A9C1;
+    background: #FFFBFD; border: 1px solid #F3E7F0; border-radius: 50%; cursor: pointer;
+  }
+  .more-btn:active { transform: scale(.93); }
+  .more-menu {
+    position: absolute; top: 38px; right: 11px; z-index: 7;
+    display: flex; flex-direction: column; min-width: 138px; padding: 5px;
+    background: #FFFDFE; border: 1px solid #F2E3EE; border-radius: 15px;
+    box-shadow: 0 16px 32px -12px rgba(120,80,140,.45);
+  }
+  .more-menu[hidden] { display: none; }
+  .more-menu button {
+    font-family: inherit; font-size: 11.5px; font-weight: 700; color: #7A6486;
+    background: none; border: 0; border-radius: 11px; padding: 9px 10px;
+    text-align: left; cursor: pointer;
+  }
+  .more-menu button:active { background: #FDF2F8; }
+  .hidden-note {
+    display: flex; align-items: center; gap: 9px;
+    margin: 0 14px 10px; padding: 10px 12px;
+    background: rgba(255,255,255,.85); border: 1px dashed #EBDCE8; border-radius: 15px;
+    font-size: 10.5px; color: #8E7C9A;
+  }
+  .hidden-note[hidden] { display: none; }
+  .hidden-note .hn-body { min-width: 0; flex: 1; }
+  .hidden-note b { display: block; font-size: 10.8px; font-weight: 800; color: #6F5C7E; }
+  .hidden-note p { margin: 2px 0 0; font-size: 9.8px; color: #A698B2; }
+
+  /* ── 빗소리 토글 ─────────────────────────────────── */
+  .mini-act {
+    font-family: inherit; cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s, transform .14s;
+  }
+  .mini-act:active { transform: scale(.95); }
+  .mini-act.on {
+    color: #5F7F76;
+    background: rgba(226,245,239,.95);
+    border-color: rgba(190,230,219,.95);
+    box-shadow: 0 4px 12px -4px rgba(120,200,180,.6);
+  }
+
+  /* ── 내 닉네임 칩 ─────────────────────────────────── */
+  .me-chip-mini {
+    max-width: 168px; font-family: inherit; font-size: 9.5px; font-weight: 700;
+    color: #B77BA0; background: #FFF3F9; border: 1px solid #F8DFEC;
+    border-radius: 999px; padding: 4px 9px; cursor: pointer;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    letter-spacing: -0.1px;
+  }
+  .me-chip-mini:active { transform: scale(.96); }
+  .compose-sub { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .me-chip {
+    position: absolute; top: calc(26px + env(safe-area-inset-top, 0px)); right: 16px; z-index: 3;
+    display: inline-flex; align-items: center; gap: 5px; max-width: 168px;
+    font-family: inherit; font-size: 11px; font-weight: 700; color: #7B5F86;
+    background: rgba(255,255,255,.74); border: 1px solid rgba(255,255,255,.95);
+    padding: 5px 9px 5px 8px; border-radius: 999px; cursor: pointer;
+    box-shadow: 0 4px 12px rgba(180,150,190,.2);
+    transition: transform .16s, background .2s;
+  }
+  .me-chip:active { transform: scale(.96); }
+  .me-chip .mc-emoji { font-size: 12.5px; line-height: 1; }
+  .me-chip .mc-name {
+    max-width: 78px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    letter-spacing: -0.2px;
+  }
+  .me-chip .mc-edit {
+    font-size: 9px; font-weight: 800; color: #C1749C;
+    padding-left: 5px; border-left: 1px solid #F2E2ED;
+  }
+
+  /* ── 닉네임 설정 시트 ─────────────────────────────── */
+  .sheet-wrap {
+    position: absolute; inset: 0; z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+    padding: 16px 15px;
+    background: rgba(74,58,87,.34);
+    -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+    opacity: 0; pointer-events: none; transition: opacity .28s ease;
+  }
+  .sheet-wrap.on { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: relative; width: 100%; max-width: 330px; max-height: 100%;
+    overflow-y: auto; scrollbar-width: none;
+    padding: 20px 18px 18px;
+    background: linear-gradient(166deg, #FFFBFD 0%, #FFF2F8 46%, #F4EEFF 100%);
+    border-radius: 30px; border: 1px solid rgba(255,255,255,.96);
+    box-shadow: 0 30px 60px -18px rgba(120,80,140,.45), inset 0 1px 0 #fff;
+    transform: translateY(16px) scale(.965);
+    transition: transform .34s cubic-bezier(.2,.8,.3,1);
+  }
+  .sheet::-webkit-scrollbar { display: none; }
+  .sheet-wrap.on .sheet { transform: none; }
+  .sheet-x {
+    position: absolute; top: 10px; right: 11px; width: 28px; height: 28px;
+    display: grid; place-items: center;
+    font-family: inherit; font-size: 12px; color: #A98FB4;
+    background: rgba(255,255,255,.8); border: 1px solid #F3E4EE; border-radius: 50%;
+    cursor: pointer;
+  }
+  .sheet-x[hidden] { display: none; }
+  .sheet-badge {
+    width: 52px; height: 52px; margin: 2px auto 12px; border-radius: 18px;
+    display: grid; place-items: center; font-size: 27px;
+    background: linear-gradient(140deg, #FFD9E8 0%, #E7DCFF 60%, #DDF1F0 100%);
+    box-shadow: 0 10px 22px -8px rgba(190,150,200,.55), inset 0 0 0 1px rgba(255,255,255,.9);
+    animation: bob 5.5s ease-in-out infinite alternate;
+  }
+  .sheet-title {
+    margin: 0; text-align: center; font-size: 18.5px; font-weight: 800;
+    letter-spacing: -0.6px; color: #4A3A57; line-height: 1.35; word-break: keep-all;
+  }
+  .sheet-sub {
+    margin: 7px 0 0; text-align: center; font-size: 12px; line-height: 1.6;
+    color: #8B7897; letter-spacing: -0.2px; word-break: keep-all;
+  }
+  .nick-preview {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    margin: 14px 0 12px; padding: 11px 12px; border-radius: 16px;
+    background: rgba(255,255,255,.82); border: 1px solid #F6E6F0;
+    box-shadow: inset 0 1px 0 #fff;
+  }
+  .nick-preview .np-emoji { font-size: 17px; line-height: 1; }
+  .nick-preview .np-name {
+    font-size: 14px; font-weight: 800; color: #6B4A7C; letter-spacing: -0.3px;
+    max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .nick-preview .np-name.dim { font-weight: 700; color: #BCAEC4; }
+  .nick-row { display: flex; gap: 7px; }
+  .nick-input {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 14px; font-weight: 700; color: #4F4459;
+    letter-spacing: -0.3px;
+    background: #FFFAFD; border: 1px solid #F3E4EE; border-radius: 14px;
+    padding: 12px 13px; outline: 0; -webkit-appearance: none; appearance: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .nick-input::placeholder { color: #C4B6CC; font-weight: 600; }
+  .nick-input:focus { border-color: #F7C4D8; box-shadow: 0 0 0 3px rgba(255,197,219,.32); }
+  .dice {
+    flex: 0 0 auto; width: 47px; font-family: inherit; font-size: 18px;
+    background: #FFF3F9; border: 1px solid #F8DFEC; border-radius: 14px;
+    cursor: pointer; color: #B0638A;
+  }
+  .dice:active { transform: scale(.94); }
+  .dice.pop { animation: pop .4s ease; }
+  .nick-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    margin: 5px 3px 0; font-size: 9.5px; color: #BFB1C7; letter-spacing: -0.1px;
+    font-variant-numeric: tabular-nums;
+  }
+  .pick-label {
+    margin: 13px 0 7px; font-size: 10.5px; font-weight: 700; color: #9A87A5;
+    letter-spacing: -0.2px;
+  }
+  .emoji-chips { display: flex; gap: 6px; }
+  .echip {
+    flex: 1; height: 40px; font-family: inherit; font-size: 17px; line-height: 1;
+    background: #FFFAFD; border: 1px solid #F3E4EE; border-radius: 13px;
+    cursor: pointer; transition: transform .14s, background .2s, border-color .2s, box-shadow .2s;
+  }
+  .echip:active { transform: scale(.93); }
+  .echip[aria-pressed="true"] {
+    background: linear-gradient(140deg, #FFE6F0 0%, #EFE6FF 100%);
+    border-color: #F3C7DC;
+    box-shadow: 0 6px 14px -6px rgba(230,150,200,.6), inset 0 0 0 1px rgba(255,255,255,.9);
+    transform: translateY(-1px);
+  }
+  .sheet-cta {
+    width: 100%; margin-top: 16px; padding: 14px 16px;
+    font-family: inherit; font-size: 14px; font-weight: 800; letter-spacing: -0.3px;
+    color: #fff; border: 0; border-radius: 16px; cursor: pointer;
+    background: linear-gradient(100deg, #FFA6C0 0%, #D8A7F2 52%, #A9B8F3 100%);
+    box-shadow: 0 12px 24px -10px rgba(226,146,196,.95);
+    transition: transform .16s;
+  }
+  .sheet-cta:active { transform: translateY(1px) scale(.99); }
+  .sheet-note {
+    margin: 9px 0 0; text-align: center; font-size: 9.8px; line-height: 1.6;
+    color: #B5A6BE; letter-spacing: -0.1px; word-break: keep-all;
+  }
+
   /* ── 실제 휴대폰에서는 화면 가득 ─────────────────── */
   @media (max-width: 460px) {
     body { padding: 0; background: #FFF7F1; overflow: hidden; height: 100vh; height: 100dvh; }
@@ -531,20 +759,29 @@
         <span class="mini">🔒 익명 보장</span>
         <span class="mini">✨ 무료</span>
         <span class="mini">🍃 몽실몽실 쉼터</span>
+        <button class="mini mini-act" id="rainBtn" type="button" aria-pressed="false"
+                aria-label="잔잔한 빗소리 켜기">🎧 빗소리</button>
       </div>
+      <button class="me-chip" type="button" data-me="1" aria-label="내 닉네임 바꾸기">
+        <span class="mc-emoji js-me-emoji" aria-hidden="true">🫧</span>
+        <span class="mc-name js-me-name">닉네임 정하기</span>
+        <span class="mc-edit">변경</span>
+      </button>
     </header>
 
     <section class="compose" aria-label="익명 고민 작성">
       <div class="compose-top">
         <span class="compose-label">지금 내 마음</span>
-        <span class="counter" id="counter">0 / 80</span>
+        <button class="me-chip-mini" type="button" data-me="1" aria-label="내 닉네임 바꾸기">
+          <span class="js-me-emoji" aria-hidden="true">🫧</span><span class="js-me-name">닉네임 정하기</span> · 변경
+        </button>
       </div>
 
       <div class="input-wrap">
         <textarea id="text" maxlength="80" rows="3"
           placeholder="지금 가장 무거운 마음 한 줄을 적어보세요..."
           aria-label="고민 한 줄"></textarea>
-        <p class="compose-sub">한 줄이면 충분해요 · 이름은 남지 않아요</p>
+        <p class="compose-sub"><span>한 줄이면 충분해요 · 닉네임으로만 보여요</span><span class="counter" id="counter">0 / 80</span></p>
       </div>
 
       <div class="tags" role="group" aria-label="감정 태그">
@@ -555,8 +792,24 @@
       </div>
 
       <button class="submit" id="submit" type="button" disabled>익명으로 털어놓기</button>
-      <p class="compose-note">이름 없이 올라가요 · 지금 이 순간만의 마음이면 충분해요</p>
+      <p class="compose-note">닉네임으로만 올라가요 · 진짜 이름은 남지 않아요</p>
     </section>
+
+    <div class="daily" id="dailyCard" aria-live="polite">
+      <span class="daily-ico" aria-hidden="true">🌿</span>
+      <div class="daily-body">
+        <b>오늘의 따뜻한 한마디</b>
+        <p id="dailyText">오늘 버틴 것만으로도 충분히 잘했어요 🫧</p>
+      </div>
+    </div>
+
+    <div class="sortbar">
+      <span class="sort-count" id="sortCount">마음 0개</span>
+      <div class="sort-toggle" role="group" aria-label="마음 정렬">
+        <button class="sort-btn" type="button" data-sort="new" aria-pressed="true">🕊️ 최신순</button>
+        <button class="sort-btn" type="button" data-sort="hug" aria-pressed="false">🔥 공감순</button>
+      </div>
+    </div>
 
     <div class="filterbar">
       <span class="filter-ico" aria-hidden="true">🍃</span>
@@ -575,6 +828,7 @@
         <div class="feed-live" id="feedLive">숲을 불러오는 중...</div>
       </div>
       <div class="net-banner" id="netBanner" hidden></div>
+      <div class="hidden-note" id="hiddenNote" hidden></div>
       <div id="feedList"></div>
     </section>
 
@@ -593,6 +847,11 @@
       </div>
       <p class="tagline">내가 조용히 심어둔 마음들</p>
       <div class="sub-meta">🌱 심은 마음 <b id="mineCount">0</b>개</div>
+      <button class="me-chip" type="button" data-me="1" aria-label="내 닉네임 바꾸기">
+        <span class="mc-emoji js-me-emoji" aria-hidden="true">🫧</span>
+        <span class="mc-name js-me-name">닉네임 정하기</span>
+        <span class="mc-edit">변경</span>
+      </button>
     </header>
     <div class="mine-wrap" id="mineList"></div>
   </section>
@@ -616,6 +875,42 @@
   </nav>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ── 닉네임 설정/변경 시트 ───────────────────────── -->
+  <div class="sheet-wrap" id="sheet" aria-hidden="true">
+    <div class="sheet" id="sheetCard" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+      <button class="sheet-x" id="sheetX" type="button" aria-label="닫기" hidden>✕</button>
+      <div class="sheet-badge" aria-hidden="true">🫧</div>
+      <h2 class="sheet-title" id="sheetTitle">🫧 몽실숲에 오신 걸 환영해요</h2>
+      <p class="sheet-sub" id="sheetSub">이곳에서 사용할 익명 닉네임을 정해 주세요</p>
+
+      <div class="nick-preview">
+        <span class="np-emoji" id="npEmoji" aria-hidden="true">🫧</span>
+        <b class="np-name dim" id="npName">닉네임 미정</b>
+      </div>
+
+      <div class="nick-row">
+        <input class="nick-input" id="nickInput" type="text" maxlength="10" autocomplete="off"
+               spellcheck="false" enterkeyhint="done" placeholder="예: 밤산책, 몽실토끼"
+               aria-label="닉네임 (최대 10자)">
+        <button class="dice" id="diceBtn" type="button" title="랜덤 닉네임 추천" aria-label="랜덤 닉네임 추천">🎲</button>
+      </div>
+      <div class="nick-meta"><span>10자까지 쓸 수 있어요</span><span id="nickCount">0 / 10</span></div>
+
+      <p class="pick-label">함께 쓸 이모지를 골라주세요</p>
+      <div class="emoji-chips" id="emojiChips" role="group" aria-label="이모지 선택">
+        <button class="echip" type="button" data-emoji="🫧" aria-pressed="true">🫧</button>
+        <button class="echip" type="button" data-emoji="🐿️" aria-pressed="false">🐿️</button>
+        <button class="echip" type="button" data-emoji="🌙" aria-pressed="false">🌙</button>
+        <button class="echip" type="button" data-emoji="🌿" aria-pressed="false">🌿</button>
+        <button class="echip" type="button" data-emoji="🐰" aria-pressed="false">🐰</button>
+        <button class="echip" type="button" data-emoji="☁️" aria-pressed="false">☁️</button>
+      </div>
+
+      <button class="sheet-cta" id="sheetCta" type="button">이 닉네임으로 입장하기</button>
+      <p class="sheet-note" id="sheetNote">비워 두면 랜덤 닉네임으로 들어가요 · 언제든 바꿀 수 있어요</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -634,14 +929,27 @@
   var EMOJIS = ["🐿️", "🌙", "🦉", "🫧", "🌿", "🐣", "🍄", "🌼"];
   var TONES = ["rose", "lav", "mint"];
   var NICKS = [
-    "익명의 다람쥐", "숲속 구름", "밤의 숲지기", "몽실 07",
-    "숲속 고슴도치", "몽실 23", "새벽 안개", "초록 이끼"
+    "익명의 다람쥐", "숲속 구름", "밤의 숲지기", "새벽 안개", "포근한 바람",
+    "몽실토끼", "달빛 산책", "숲속 고슴도치", "솔솔 바람", "밤이슬",
+    "초록 이끼", "몽실 07", "조용한 나무", "구름 위 마음"
+  ];
+  var DAILY_LINES = [
+    "오늘 버틴 것만으로도 충분히 잘했어요 🫧",
+    "아무 일도 못 한 날도, 숨 쉬어준 것만으로 고마워요 🌿",
+    "마음이 무거운 날엔 조금 천천히 걸어도 괜찮아요 ☁️",
+    "당신의 속도로 살아도 다 잘 되고 있어요 🌙",
+    "말하지 못한 마음도 여기서는 소중한 이야기예요 💌",
+    "오늘 하루도 끝까지 와줘서 고마워요 🌼",
+    "울고 싶은 날엔 울어도 돼요. 숲이 다 받아둘게요 🍃",
+    "잘하려고 애쓴 만큼, 스스로에게도 다정해져 주세요 🤍",
+    "지금 이 마음도 언젠가 가벼워질 거예요 🌈"
   ];
 
   /* ── 상태 ────────────────────────────────────────── */
   var state = { posts: [], reacted: {} };
   var activeTab = "home";
   var activeFilter = "전체";
+  var sortMode = "new";
   var drafts = {};
   var openThreads = {};
   var pendingDrop = null;
@@ -662,6 +970,10 @@
   var tabDot = document.getElementById("tabDot");
   var feedLive = document.getElementById("feedLive");
   var netBanner = document.getElementById("netBanner");
+  var dailyText = document.getElementById("dailyText");
+  var sortCount = document.getElementById("sortCount");
+  var hiddenNote = document.getElementById("hiddenNote");
+  var rainBtn = document.getElementById("rainBtn");
 
   /* ── 내 기기 기억 (내가 쓴 글/한마디, 누른 공감) ──── */
   var mineIds = loadMine();
@@ -690,6 +1002,64 @@
   }
 
   state.reacted = mineIds.reacted || {};
+
+  /* ── 숨긴 글 (내 화면에서만) ─────────────────────── */
+  var HIDDEN_KEY = "mongsil.hidden.v1";
+  var REPORT_KEY = "mongsil.reported.v1";
+  var hiddenIds = loadHidden();
+
+  function loadHidden() {
+    try {
+      var raw = localStorage.getItem(HIDDEN_KEY);
+      if (raw) {
+        var d = JSON.parse(raw);
+        if (Array.isArray(d)) return d.filter(function (x) { return typeof x === "string"; });
+      }
+    } catch (e) {}
+    return [];
+  }
+
+  function saveHidden() {
+    try { localStorage.setItem(HIDDEN_KEY, JSON.stringify(hiddenIds)); } catch (e) {}
+  }
+
+  function isHidden(id) { return hiddenIds.indexOf(id) >= 0; }
+
+  function saveReport(id) {
+    try {
+      var raw = localStorage.getItem(REPORT_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) arr = [];
+      if (arr.indexOf(id) < 0) arr.push(id);
+      localStorage.setItem(REPORT_KEY, JSON.stringify(arr));
+    } catch (e) {}
+  }
+
+  /* ── 내 닉네임 (mongsil.profile.v1) ──────────────── */
+  var PROFILE_KEY = "mongsil.profile.v1";
+  var NICK_MAX = 10;
+  var PROFILE_EMOJIS = ["🫧", "🐿️", "🌙", "🌿", "🐰", "☁️"];
+  var profile = loadProfile();
+
+  function loadProfile() {
+    try {
+      var raw = localStorage.getItem(PROFILE_KEY);
+      if (raw) {
+        var d = JSON.parse(raw) || {};
+        var n = typeof d.nickname === "string" ? d.nickname.replace(/\s+/g, " ").trim().slice(0, NICK_MAX) : "";
+        var e = typeof d.emoji === "string" && d.emoji ? d.emoji : "🫧";
+        if (n) return { nickname: n, emoji: e };
+      }
+    } catch (e) {}
+    return null;
+  }
+
+  function saveProfile(p) {
+    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); } catch (e) {}
+  }
+
+  function myName() { return profile && profile.nickname ? profile.nickname : pickNick(); }
+  function myEmoji() { return profile && profile.emoji ? profile.emoji : pickEmoji(); }
 
   /* ── 작은 도구들 ─────────────────────────────────── */
   function hash(s) {
@@ -1005,6 +1375,12 @@
         '<span class="avatar ' + p.tone + '" aria-hidden="true">' + p.emoji + "</span>" +
         '<div class="who"><b>' + esc(p.name) + "</b><small>" + esc(whenText(p)) + "</small></div>" +
         '<span class="card-tag">' + esc(p.tags[0] || "그냥") + "</span>" +
+        '<button class="more-btn" type="button" data-act="more" aria-expanded="false"' +
+          ' aria-label="이 글 숨기기·신고하기">···</button>' +
+      "</div>" +
+      '<div class="more-menu" hidden>' +
+        '<button type="button" data-act="hide">🙈 이 글 숨기기</button>' +
+        '<button type="button" data-act="report">🚩 신고하기</button>' +
       "</div>" +
       '<p class="card-text">' + esc(p.text) + "</p>" +
       '<div class="reactions">' +
@@ -1020,17 +1396,46 @@
 
   /* ── 홈 ──────────────────────────────────────────── */
   function filteredPosts() {
-    if (activeFilter === "전체") return state.posts;
-    return state.posts.filter(function (p) { return p.tags.indexOf(activeFilter) >= 0; });
+    var arr = state.posts.filter(function (p) { return !isHidden(p.id); });
+    if (activeFilter !== "전체") {
+      arr = arr.filter(function (p) { return p.tags.indexOf(activeFilter) >= 0; });
+    }
+    if (sortMode === "hug") {
+      return arr.slice().sort(function (a, b) {
+        var d = (b.hug + b.me) - (a.hug + a.me);
+        if (d) return d;
+        return b.createdAt - a.createdAt;
+      });
+    }
+    return arr;
+  }
+
+  function syncSortChips() {
+    Array.prototype.forEach.call(document.querySelectorAll(".sort-btn"), function (b) {
+      b.setAttribute("aria-pressed", b.dataset.sort === sortMode ? "true" : "false");
+    });
+  }
+
+  function updateHiddenNote() {
+    if (!hiddenNote) return;
+    var n = hiddenIds.length;
+    if (!n) { hiddenNote.hidden = true; hiddenNote.innerHTML = ""; return; }
+    hiddenNote.hidden = false;
+    hiddenNote.innerHTML = '<span aria-hidden="true">🙈</span>' +
+      '<div class="hn-body"><b>숨긴 마음 ' + n + '개</b><p>내 화면에서만 안 보여요.</p></div>' +
+      '<button type="button" class="nb-retry" data-act="unhide">모두 보기</button>';
   }
 
   function setFeedLive(n) {
     if (!booted) { feedLive.textContent = "숲을 불러오는 중..."; return; }
     if (!online) { feedLive.textContent = "연결을 기다리는 중"; return; }
     if (activeFilter === "전체") {
-      feedLive.textContent = "지금 " + state.posts.length + "개의 마음이 머물러 있어요";
+      feedLive.textContent = "지금 " + n + "개의 마음이 머물러 있어요";
     } else {
       feedLive.textContent = activeFilter + " 마음 " + n + "개";
+    }
+    if (sortCount) {
+      sortCount.textContent = "마음 " + n + "개" + (sortMode === "hug" ? " · 공감 많은 순" : "");
     }
   }
 
@@ -1052,6 +1457,7 @@
   function renderHome() {
     var arr = filteredPosts();
     setFeedLive(arr.length);
+    updateHiddenNote();
     if (!arr.length) {
       feedList.innerHTML = activeFilter === "전체"
         ? emptyHTML()
@@ -1354,7 +1760,7 @@
     if (input.disabled) return;
     input.disabled = true;
 
-    createComment(p.id, v, pickNick()).then(function (rows) {
+    createComment(p.id, v, myName()).then(function (rows) {
       var row = rows && rows[0];
       if (row && row.id) return row;
       return findNewComment(p.id, v);
@@ -1415,9 +1821,13 @@
     if (!card) return;
     var p = postById(card.dataset.id);
     if (!p) return;
-    if (btn.dataset.act === "say") toggleThread(p, card, btn);
-    else if (btn.dataset.act === "send") sendSay(card);
-    else if (btn.dataset.act === "react") toggleReact(p, card, btn);
+    var act = btn.dataset.act;
+    if (act === "say") toggleThread(p, card, btn);
+    else if (act === "send") sendSay(card);
+    else if (act === "react") toggleReact(p, card, btn);
+    else if (act === "more") toggleMore(card, btn);
+    else if (act === "hide") hidePost(p.id);
+    else if (act === "report") reportPost(p.id);
   });
 
   feedList.addEventListener("input", function (e) {
@@ -1534,7 +1944,7 @@
     submitEl.disabled = true;
     submitEl.textContent = "숲에 심는 중...";
 
-    createPost(v, tags, pickNick(), pickEmoji()).then(function (rows) {
+    createPost(v, tags, myName(), myEmoji()).then(function (rows) {
       var row = rows && rows[0];
       if (row && row.id) return row;
       return findNewPost(v);
@@ -1597,13 +2007,285 @@
     }
   });
 
+  /* ── 오늘의 따뜻한 한마디 ─────────────────────────── */
+  function setDaily() {
+    if (!dailyText) return;
+    var d = new Date();
+    var day = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+    dailyText.textContent = DAILY_LINES[Math.abs(day) % DAILY_LINES.length];
+  }
+
+  /* ── 닉네임 시트 ─────────────────────────────────── */
+  var sheet = document.getElementById("sheet");
+  var sheetX = document.getElementById("sheetX");
+  var sheetTitle = document.getElementById("sheetTitle");
+  var sheetSub = document.getElementById("sheetSub");
+  var sheetCta = document.getElementById("sheetCta");
+  var sheetNote = document.getElementById("sheetNote");
+  var nickInput = document.getElementById("nickInput");
+  var nickCount = document.getElementById("nickCount");
+  var npEmoji = document.getElementById("npEmoji");
+  var npName = document.getElementById("npName");
+  var diceBtn = document.getElementById("diceBtn");
+  var emojiChips = document.getElementById("emojiChips");
+  var sheetMode = "welcome";
+  var pickedEmoji = PROFILE_EMOJIS[0];
+
+  function paintProfile() {
+    var p = profile;
+    Array.prototype.forEach.call(document.querySelectorAll(".js-me-emoji"), function (el) {
+      el.textContent = p ? p.emoji : "🫧";
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".js-me-name"), function (el) {
+      el.textContent = p ? p.nickname : "닉네임 정하기";
+    });
+  }
+
+  function paintPreview() {
+    var v = nickInput.value.replace(/\s+/g, " ").trim().slice(0, NICK_MAX);
+    nickCount.textContent = nickInput.value.length + " / " + NICK_MAX;
+    npEmoji.textContent = pickedEmoji;
+    npName.textContent = v || "닉네임 미정";
+    npName.classList.toggle("dim", !v);
+  }
+
+  function selectEmoji(e) {
+    pickedEmoji = e;
+    Array.prototype.forEach.call(emojiChips.querySelectorAll(".echip"), function (b) {
+      b.setAttribute("aria-pressed", b.dataset.emoji === e ? "true" : "false");
+    });
+    paintPreview();
+  }
+
+  function openSheet(mode) {
+    sheetMode = mode === "edit" ? "edit" : "welcome";
+    var edit = sheetMode === "edit";
+    sheetTitle.textContent = edit ? "🫧 닉네임 바꾸기" : "🫧 몽실숲에 오신 걸 환영해요";
+    sheetSub.textContent = edit
+      ? "숲에서 불릴 새 이름을 정해 주세요"
+      : "이곳에서 사용할 익명 닉네임을 정해 주세요";
+    sheetCta.textContent = edit ? "이 닉네임으로 바꾸기" : "이 닉네임으로 입장하기";
+    sheetNote.textContent = edit
+      ? "새 닉네임은 앞으로 쓰는 글과 한마디에 보여요 · 10자까지"
+      : "비워 두면 랜덤 닉네임으로 들어가요 · 언제든 바꿀 수 있어요";
+    sheetX.hidden = !edit;
+    nickInput.value = edit && profile ? profile.nickname : "";
+    selectEmoji(edit && profile ? profile.emoji : PROFILE_EMOJIS[0]);
+    paintPreview();
+    closeMenus(null);
+    sheet.classList.add("on");
+    sheet.setAttribute("aria-hidden", "false");
+    setTimeout(function () {
+      try { nickInput.focus({ preventScroll: true }); } catch (e) {}
+    }, 280);
+  }
+
+  function closeSheet() {
+    sheet.classList.remove("on");
+    sheet.setAttribute("aria-hidden", "true");
+    try { nickInput.blur(); } catch (e) {}
+  }
+
+  function randomNick() {
+    var n = pickNick();
+    var guard = 0;
+    while (profile && n === profile.nickname && guard++ < 10) n = pickNick();
+    return n;
+  }
+
+  function submitProfile() {
+    var v = nickInput.value.replace(/\s+/g, " ").trim().slice(0, NICK_MAX);
+    var generated = false;
+    var edited = sheetMode === "edit";
+    if (!v) { v = randomNick(); nickInput.value = v; generated = true; }
+    profile = { nickname: v, emoji: pickedEmoji };
+    saveProfile(profile);
+    paintProfile();
+    paintPreview();
+    closeSheet();
+    if (generated) toast("랜덤 닉네임은 ‘" + v + "’ 님이에요 🫧");
+    else if (edited) toast("이제 ‘" + v + "’ 님이에요 🌿");
+    else toast("‘" + v + "’ 님, 몽실숲에 오신 걸 환영해요 🫧");
+  }
+
+  document.addEventListener("click", function (e) {
+    var chip = e.target.closest("[data-me]");
+    if (!chip) return;
+    openSheet(profile ? "edit" : "welcome");
+  });
+
+  sheetX.addEventListener("click", closeSheet);
+  sheet.addEventListener("click", function (e) {
+    if (e.target === sheet && sheetMode === "edit") closeSheet();
+  });
+  nickInput.addEventListener("input", function () {
+    if (nickInput.value.length > NICK_MAX) nickInput.value = nickInput.value.slice(0, NICK_MAX);
+    paintPreview();
+  });
+  nickInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); submitProfile(); }
+  });
+  diceBtn.addEventListener("click", function () {
+    nickInput.value = randomNick();
+    paintPreview();
+    diceBtn.classList.remove("pop");
+    void diceBtn.offsetWidth;
+    diceBtn.classList.add("pop");
+  });
+  emojiChips.addEventListener("click", function (e) {
+    var b = e.target.closest(".echip");
+    if (b) selectEmoji(b.dataset.emoji);
+  });
+  sheetCta.addEventListener("click", submitProfile);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && sheet.classList.contains("on") && sheetMode === "edit") closeSheet();
+  });
+
+  /* ── 신고·숨기기 ─────────────────────────────────── */
+  function closeMenus(except) {
+    Array.prototype.forEach.call(document.querySelectorAll(".more-menu"), function (m) {
+      if (m !== except) m.hidden = true;
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".more-btn"), function (b) {
+      b.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function toggleMore(card, btn) {
+    var menu = card.querySelector(".more-menu");
+    if (!menu) return;
+    var willOpen = menu.hidden;
+    closeMenus(willOpen ? menu : null);
+    menu.hidden = !willOpen;
+    btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  }
+
+  function hidePost(id) {
+    if (!isHidden(id)) hiddenIds.push(id);
+    saveHidden();
+    closeMenus(null);
+    delete openThreads[id];
+    renderHome();
+    toast("숨김 처리됐어요 🙈");
+  }
+
+  function reportPost(id) {
+    saveReport(id);
+    hidePost(id);
+    toast("신고를 남기고 숨겼어요 · 접수 기능은 준비 중이에요 🌿");
+  }
+
+  document.addEventListener("click", function (e) {
+    if (e.target.closest(".more-menu") || e.target.closest('[data-act="more"]')) return;
+    closeMenus(null);
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest('[data-act="unhide"]')) return;
+    hiddenIds = [];
+    saveHidden();
+    renderHome();
+    toast("숨겼던 마음을 다시 보여드릴게요 🍃");
+  });
+
+  /* ── 정렬 토글 ───────────────────────────────────── */
+  Array.prototype.forEach.call(document.querySelectorAll(".sort-btn"), function (b) {
+    b.addEventListener("click", function () {
+      sortMode = b.dataset.sort === "hug" ? "hug" : "new";
+      syncSortChips();
+      renderHome();
+      var v = document.getElementById("view-home");
+      if (v) {
+        var bar = document.querySelector(".filterbar");
+        var top = bar ? bar.offsetTop : 0;
+        if (v.scrollTop > top) v.scrollTop = top;
+      }
+    });
+  });
+
+  /* ── 잔잔한 빗소리 (Web Audio 합성) ──────────────── */
+  var audioCtx = null, rainNodes = null, rainOn = false;
+
+  function buildRain(ctx) {
+    var len = Math.floor(ctx.sampleRate * 2);
+    var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    var d = buf.getChannelData(0);
+    var b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+    for (var i = 0; i < len; i++) {
+      var w = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + w * 0.0555179;
+      b1 = 0.99332 * b1 + w * 0.0750759;
+      b2 = 0.96900 * b2 + w * 0.1538520;
+      b3 = 0.86650 * b3 + w * 0.3104856;
+      b4 = 0.55000 * b4 + w * 0.5329522;
+      b5 = -0.7616 * b5 - w * 0.0168980;
+      d[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362) * 0.09;
+      b6 = w * 0.115926;
+    }
+    var src = ctx.createBufferSource();
+    src.buffer = buf;
+    src.loop = true;
+    var hp = ctx.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 180;
+    var lp = ctx.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.value = 1150;
+    lp.Q.value = 0.6;
+    var gain = ctx.createGain();
+    gain.gain.value = 0.0001;
+    src.connect(hp);
+    hp.connect(lp);
+    lp.connect(gain);
+    gain.connect(ctx.destination);
+    src.start(0);
+    return { src: src, gain: gain };
+  }
+
+  function paintRain() {
+    rainBtn.setAttribute("aria-pressed", rainOn ? "true" : "false");
+    rainBtn.classList.toggle("on", rainOn);
+    rainBtn.textContent = rainOn ? "🎧 빗소리 켜짐" : "🎧 빗소리";
+    rainBtn.setAttribute("aria-label", rainOn ? "빗소리 끄기" : "잔잔한 빗소리 켜기");
+  }
+
+  function toggleRain() {
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) throw new Error("no-audio");
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === "suspended" && audioCtx.resume) audioCtx.resume();
+      if (!rainNodes) rainNodes = buildRain(audioCtx);
+      var now = audioCtx.currentTime;
+      var g = rainNodes.gain.gain;
+      g.cancelScheduledValues(now);
+      g.setValueAtTime(Math.max(g.value, 0.0001), now);
+      if (!rainOn) g.linearRampToValueAtTime(0.5, now + 1.4);
+      else g.linearRampToValueAtTime(0.0001, now + 0.7);
+    } catch (err) {
+      toast("지금은 소리를 켤 수 없어요 🍃");
+      return;
+    }
+    rainOn = !rainOn;
+    paintRain();
+    if (rainOn) toast("잔잔한 빗소리가 숲을 채워요 🎧");
+  }
+
+  rainBtn.addEventListener("click", toggleRain);
+
   /* ── 첫 렌더 & 주기적 동기화 ─────────────────────── */
   renderHome();
   renderMine();
   renderHearts();
   syncCompose();
+  syncSortChips();
+  setDaily();
+  paintProfile();
+  paintRain();
   updateTabDot();
   setNetBanner("loading");
+
+  if (!profile) openSheet("welcome");
 
   loadFeed({ announce: false });
 

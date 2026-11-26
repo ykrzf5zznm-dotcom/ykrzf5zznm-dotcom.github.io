@@ -621,9 +621,11 @@
     padding: 16px 15px;
     background: rgba(74,58,87,.34);
     -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
-    opacity: 0; pointer-events: none; transition: opacity .28s ease;
+    opacity: 0; pointer-events: none;
+    visibility: hidden;
+    transition: opacity .28s ease, visibility .28s ease;
   }
-  .sheet-wrap.on { opacity: 1; pointer-events: auto; }
+  .sheet-wrap.on { opacity: 1; pointer-events: auto; visibility: visible; }
   .sheet {
     position: relative; width: 100%; max-width: 330px; max-height: 100%;
     overflow-y: auto; scrollbar-width: none;

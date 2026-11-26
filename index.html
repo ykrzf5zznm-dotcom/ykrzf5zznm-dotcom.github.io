@@ -844,25 +844,25 @@
 
       var wasOffline = !online;
       online = true;
+      booted = true;
       state.posts = posts;
       var sig = signature(posts);
       var changed = sig !== lastSig || wasOffline;
       lastSig = sig;
 
-      if (changed || !booted) {
+      if (changed) {
         renderAll();
       } else {
         updateTabDot();
       }
-      booted = true;
       setNetBanner("ok");
 
       if (opts.announce && changed) toast("숲의 새 마음을 가져왔어요 🍃");
     }).catch(function (err) {
       online = false;
+      booted = true;
       setNetBanner("error", err);
       renderAll();
-      booted = true;
     }).then(function () {
       loading = false;
     });
@@ -1034,10 +1034,9 @@
   function emptyHTML() {
     if (!online) {
       return '<div class="big-empty">' +
-        '<div class="empty-emoji">🌫️</div>' +
-        "<b>숲이 잠시 연결을 기다리고 있어요</b>" +
-        "<p>인터넷이 연결되면 다른 사람들의 마음이 다시 보여요.</p>" +
-        '<button class="empty-btn" type="button" data-retry="1">🍃 다시 연결하기</button>' +
+        '<div class="empty-emoji">🍃</div>' +
+        "<b>아직 보여드릴 마음이 없어요</b>" +
+        "<p>연결되면 숲속의 마음들이 여기 모여요.</p>" +
         "</div>";
     }
     return '<div class="big-empty">' +

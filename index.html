@@ -1742,6 +1742,64 @@
   body[data-font="myeongjo"] .bubble p { font-size: 13px; }
   body[data-font="myeongjo"] .who b { font-size: 13px; }
 
+  /* ══════════ 자주 오면 반겨주는 몽실이 인사 ══════════ */
+  .greet {
+    position: relative; z-index: 2;
+    display: flex; align-items: flex-end; gap: 7px;
+    margin: 12px 15px 0;
+  }
+  .greet[hidden] { display: none; }
+  .greet-av {
+    flex: 0 0 44px; width: 44px; height: 55px;
+    filter: drop-shadow(0 6px 10px rgba(150,120,175,.22));
+    animation: bob 5.5s ease-in-out infinite alternate;
+  }
+  .greet-bubble {
+    position: relative; flex: 1; min-width: 0; text-align: left;
+    font-family: inherit; cursor: pointer;
+    background: rgba(255,255,255,.93);
+    border: 1px solid rgba(255,255,255,.98);
+    border-radius: 16px 16px 16px 5px;
+    padding: 10px 12px 9px;
+    box-shadow: 0 10px 24px -16px rgba(170,135,190,.85);
+    transition: transform .16s, background .2s;
+  }
+  .greet-bubble:active { transform: scale(.985); }
+  .greet-bubble::before {
+    content: ""; position: absolute; left: -6px; bottom: 12px;
+    border: 6px solid transparent; border-left: 0; border-right-color: #FFFDFE;
+  }
+  .greet-text {
+    display: block; font-size: 11.8px; line-height: 1.62; color: #5A4868;
+    letter-spacing: -.2px; word-break: keep-all;
+  }
+  .greet-foot {
+    display: flex; align-items: center; gap: 6px; margin-top: 5px;
+  }
+  .greet-count {
+    font-size: 8.8px; font-weight: 800; color: #B0638A;
+    background: #FFF0F7; border: 1px solid #F8DDEA;
+    padding: 2px 6px; border-radius: 999px; white-space: nowrap;
+  }
+  .greet-hint {
+    font-size: 8.8px; font-weight: 700; color: #BCAEC4;
+    letter-spacing: -.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .phone.night .greet-bubble { background: rgba(38,33,60,.9); border-color: rgba(255,255,255,.09); }
+  .phone.night .greet-bubble::before { border-right-color: #262039; }
+  .phone.night .greet-text { color: #E6DEF3; }
+  .phone.night .greet-count { color: #F0A6C8; background: #3A2C4E; border-color: #4A3A60; }
+  .phone.night .greet-hint { color: #8F84A5; }
+  .phone[data-theme="peach"] .greet-bubble { background: rgba(255,252,247,.95); }
+  .phone[data-theme="peach"] .greet-bubble::before { border-right-color: #FFFCF7; }
+  .phone[data-theme="peach"] .greet-count { color: #C2705F; background: #FFF2E9; border-color: #FBE0D2; }
+  .phone[data-theme="matcha"] .greet-bubble { background: rgba(252,253,246,.95); }
+  .phone[data-theme="matcha"] .greet-bubble::before { border-right-color: #FCFDF6; }
+  .phone[data-theme="matcha"] .greet-count { color: #63935B; background: #F1F9E9; border-color: #DFEDD3; }
+  body[data-font="hand"] .greet-text { font-size: 14px; }
+  body[data-font="hand"] .greet-hint, body[data-font="hand"] .greet-count { font-size: 10.5px; }
+  body[data-font="myeongjo"] .greet-text { font-size: 12.6px; }
+
   /* 야간용 새 화면 */
   .phone.night .charcard { background: linear-gradient(150deg, rgba(46,39,72,.92) 0%, rgba(38,33,60,.92) 100%); border-color: rgba(255,255,255,.09); }
   .phone.night .charcard b { color: #EDE4F8; }
@@ -1852,6 +1910,18 @@
       <button class="submit" id="submit" type="button" disabled>익명으로 털어놓기</button>
       <p class="compose-note">닉네임으로만 올라가요 · 진짜 이름은 남지 않아요</p>
     </section>
+
+    <!-- ── 몽실이 인사 (방문 횟수 맞춤) ─────────────── -->
+    <div class="greet" id="greetBox" hidden>
+      <div class="greet-av" id="greetAv" aria-hidden="true"></div>
+      <button class="greet-bubble" id="greetBubble" type="button" aria-label="몽실이 인사 말풍선">
+        <span class="greet-text" id="greetText" aria-live="polite"></span>
+        <span class="greet-foot">
+          <span class="greet-count" id="greetCount">🌱 1번째 방문</span>
+          <span class="greet-hint">톡 누르면 다른 인사도 해요</span>
+        </span>
+      </button>
+    </div>
 
     <div class="daily" id="dailyCard" aria-live="polite">
       <span class="daily-ico" aria-hidden="true">🌿</span>
@@ -3403,6 +3473,7 @@
       el.textContent = p ? p.nickname : "닉네임 정하기";
     });
     paintMyAvatars();
+    if (typeof renderGreet === "function") renderGreet(true);
   }
 
   function paintPreview() {
@@ -4831,6 +4902,8 @@
     Array.prototype.forEach.call(document.querySelectorAll(".say-me"), function (el) {
       el.innerHTML = svg;
     });
+    var ga = document.getElementById("greetAv");
+    if (ga) ga.innerHTML = svg;
   }
 
   function previewBox() {
@@ -5160,6 +5233,110 @@
 
   paintMyAvatars();
   renderDrawTools();
+
+  /* ══════════ 자주 오면 반겨주는 몽실이 인사 ══════════ */
+  var VISIT_KEY = "mongsil.visits.v1";
+  var VISIT_GAP = 30 * 60 * 1000;
+  var visits = loadVisits();
+  var greetIdx = 0;
+
+  function loadVisits() {
+    try {
+      var d = JSON.parse(localStorage.getItem(VISIT_KEY) || "{}") || {};
+      return {
+        count: Math.max(0, Number(d.count || 0) || 0),
+        last: Number(d.last || 0) || 0
+      };
+    } catch (e) {}
+    return { count: 0, last: 0 };
+  }
+
+  function saveVisits() {
+    try { localStorage.setItem(VISIT_KEY, JSON.stringify(visits)); } catch (e) {}
+  }
+
+  /* 새로고침 연타나 30분 안의 재입장은 같은 방문으로 묶음 */
+  function bumpVisit() {
+    var now = Date.now();
+    if (!visits.last || now - visits.last > VISIT_GAP) {
+      visits.count += 1;
+      visits.last = now;
+      saveVisits();
+    }
+  }
+  bumpVisit();
+
+  var VISIT_NIGHT = [
+    "이 시간까지 깨어 있었어요? 몽실이가 옆에 있어요 🌙",
+    "새벽엔 마음이 유난히 커지니까, 오늘은 조금만 생각하고 자요 🫧",
+    "조용한 밤 숲에 와줘서 고마워요. 마음은 여기 두고 가요 ⭐"
+  ];
+  var VISIT_SMALL = [
+    "숨 한 번 크게 쉬고, 오늘 마음 한 줄만 적어봐도 좋아요 🍃",
+    "여기선 아무도 다그치지 않아요. 천천히 있어도 돼요 ☁️",
+    "몽실이가 오늘도 이 자리에서 기다리고 있었어요 🫧"
+  ];
+
+  function greetName() {
+    return profile && profile.nickname ? profile.nickname : "몽실 친구";
+  }
+
+  function greetList() {
+    var name = greetName();
+    var n = visits.count;
+    var hour = new Date().getHours();
+    var night = hour >= 0 && hour < 5;
+    var lines = [];
+    if (n <= 1) {
+      lines.push("처음 오셨네요! 여긴 언제든 마음 내려놓는 몽실숲이에요 🫧");
+      lines.push("어떤 마음이든 괜찮아요. 한 줄 적어두고 가도 좋아요 🌿");
+    } else if (n <= 4) {
+      lines.push("또 찾아와 줘서 반가워요, " + name + "님! 오늘 하루는 어땠나요? 🌿");
+      lines.push("또 봐서 기뻐요 " + name + "님. 잠깐 숲에서 쉬다 가요 ☁️");
+    } else if (n <= 9) {
+      lines.push("자주 만나서 정말 좋아요 " + name + "님! 오늘도 몽실이가 응원해요 🤍");
+      lines.push("이 숲에 " + name + "님 자리가 늘 준비되어 있어요 🌱");
+    } else {
+      lines.push("언제 와도 반가운 단골 " + name + "님 ✨ 오늘도 편하게 쉬다 가세요!");
+      lines.push("벌써 " + n + "번째예요. 이제 몽실이랑 단짝이네요 💗");
+    }
+    lines = lines.concat(VISIT_SMALL);
+    if (night) lines = lines.concat(VISIT_NIGHT);
+    return lines;
+  }
+
+  function renderGreet(reset) {
+    var box = document.getElementById("greetBox");
+    if (!box) return;
+    if (reset || !box._lines) {
+      box._lines = greetList();
+      greetIdx = 0;
+    }
+    greetIdx = greetIdx % box._lines.length;
+    var textEl = document.getElementById("greetText");
+    var cntEl = document.getElementById("greetCount");
+    var avEl = document.getElementById("greetAv");
+    if (avEl) avEl.innerHTML = avatarSVG(avatar);
+    if (textEl) textEl.textContent = box._lines[greetIdx];
+    if (cntEl) cntEl.textContent = "🌱 " + visits.count + "번째 방문";
+    box.hidden = false;
+  }
+
+  (function initGreet() {
+    renderGreet(true);
+    var gb = document.getElementById("greetBubble");
+    if (!gb) return;
+    gb.addEventListener("click", function () {
+      var box = document.getElementById("greetBox");
+      if (!box || !box._lines) return;
+      greetIdx = (greetIdx + 1) % box._lines.length;
+      var textEl = document.getElementById("greetText");
+      if (textEl) textEl.textContent = box._lines[greetIdx];
+      gb.classList.remove("pop");
+      void gb.offsetWidth;
+      gb.classList.add("pop");
+    });
+  })();
 
   /* ── 첫 렌더 & 주기적 동기화 ─────────────────────── */
   var newVisitor = checkAttendance();

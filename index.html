@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFF3F7">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>몽실숲 · 아무에게도 못 한 말, 숲에 두고 가도 괜찮아요</title>
+<style>
+  :root{
+    --ink:#453B4F;
+    --ink2:#5D4F69;
+    --muted:#A99BB2;
+    --line:#F4E7F0;
+    --rose:#FFAEC6;
+    --lav:#D3A9F4;
+    --mint:#8FD9C2;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard",
+                 "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background:
+      radial-gradient(60% 45% at 15% 0%, #FFE8F1 0%, rgba(255,232,241,0) 70%),
+      radial-gradient(55% 45% at 90% 15%, #E9E0FF 0%, rgba(233,224,255,0) 70%),
+      radial-gradient(60% 50% at 50% 100%, #E4F2F1 0%, rgba(228,242,241,0) 70%),
+      #FBF5F2;
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 12px;
+  }
+
+  /* ── 휴대폰 프레임 (390×844) ───────────────────────── */
+  .phone {
+    position: relative;
+    width: 390px;
+    height: 844px;
+    border-radius: 30px;
+    overflow: hidden;
+    background: linear-gradient(172deg, #FFF7F1 0%, #FDECF4 34%, #F3EBFF 68%, #EAF5F4 100%);
+    box-shadow: 0 30px 70px -20px rgba(146, 112, 168, .38), 0 0 0 1px rgba(255,255,255,.7);
+    isolation: isolate;
+  }
+
+  /* 배경 몽실 구름 & 방울 */
+  .sky { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .sky::before, .sky::after {
+    content: ""; position: absolute; border-radius: 50%; filter: blur(34px); opacity: .65;
+  }
+  .sky::before { width: 230px; height: 230px; top: -70px; left: -60px; background: #FFD3E2; }
+  .sky::after  { width: 250px; height: 250px; top: 120px; right: -90px; background: #DCD2FF; }
+  .cloud {
+    position: absolute; font-size: 30px; opacity: .45; filter: blur(.3px);
+    animation: bob 9s ease-in-out infinite alternate;
+  }
+  .cloud.c1 { top: 26px; right: 26px; font-size: 25px; }
+  .cloud.c2 { top: 96px; right: 66px; font-size: 16px; opacity: .35; animation-delay: -3s; }
+  .cloud.c3 { top: 60px; left: 18px; font-size: 19px; opacity: .3; animation-delay: -6s; }
+  .cloud.c4 { top: 740px; left: 30px; font-size: 22px; opacity: .3; animation-delay: -4.5s; }
+  @keyframes bob { from { transform: translateY(0) } to { transform: translateY(-9px) } }
+
+  /* ── 탭 화면(스크롤 영역) ────────────────────────── */
+  .view {
+    position: absolute; inset: 0; z-index: 1;
+    display: none;
+    overflow-y: auto; overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+  }
+  .view::-webkit-scrollbar { display: none; }
+  .view.active { display: block; }
+
+  /* ── 헤더 ───────────────────────────────────────── */
+  .hero {
+    position: relative;
+    padding: calc(30px + env(safe-area-inset-top, 0px)) 22px 74px;
+    background:
+      radial-gradient(115% 85% at 12% 0%, rgba(255,255,255,.78) 0%, rgba(255,255,255,0) 58%),
+      linear-gradient(158deg, #FFD8E6 0%, #EADDFF 56%, #DCEFF2 100%);
+    border-radius: 0 0 36px 36px;
+  }
+  .brand { display: flex; align-items: center; gap: 9px; }
+  .brand-emoji {
+    width: 34px; height: 34px; border-radius: 12px;
+    display: grid; place-items: center; font-size: 20px;
+    background: linear-gradient(140deg, #FFD9E8 0%, #E7DCFF 100%);
+    box-shadow: 0 6px 14px rgba(190,150,200,.28), inset 0 0 0 1px rgba(255,255,255,.8);
+  }
+  .brand-name {
+    font-size: 24px; font-weight: 800; letter-spacing: -1px; color: #4A3A57;
+    text-shadow: 0 1px 0 rgba(255,255,255,.6);
+  }
+  .tagline {
+    margin: 12px 0 0; font-size: 13.5px; line-height: 1.65; color: #6B5876;
+    letter-spacing: -0.2px; word-break: keep-all;
+  }
+  .mini-chips { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+  .mini {
+    font-size: 10.5px; font-weight: 600; color: #7A6484;
+    background: rgba(255,255,255,.62); border: 1px solid rgba(255,255,255,.85);
+    padding: 5px 10px; border-radius: 999px;
+    box-shadow: 0 3px 8px rgba(180,150,190,.12);
+  }
+
+  /* ── 작성 카드 ───────────────────────────────────── */
+  .compose {
+    position: relative; z-index: 2;
+    margin: -56px 15px 0;
+    padding: 16px 16px 14px;
+    background: rgba(255,255,255,.86);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border-radius: 26px;
+    border: 1px solid rgba(255,255,255,.95);
+    box-shadow: 0 16px 36px -12px rgba(166,130,182,.35), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .compose-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+  .compose-label { font-size: 12.5px; font-weight: 700; color: #6E5A7A; display: flex; align-items: center; gap: 6px; }
+  .compose-label::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: linear-gradient(135deg,#FF9FBB,#C6A6F5);
+  }
+  .counter { font-size: 10.5px; color: #B3A5BB; font-variant-numeric: tabular-nums; }
+
+  .input-wrap {
+    background: #FFFAFC; border: 1px solid #F5E6F0; border-radius: 17px;
+    padding: 10px 12px; transition: border-color .2s, box-shadow .2s;
+  }
+  .input-wrap:focus-within { border-color: #F7C4D8; box-shadow: 0 0 0 3px rgba(255,197,219,.32); }
+  textarea {
+    width: 100%; height: 66px; max-height: 140px; border: 0; outline: 0; resize: none; background: transparent;
+    font-family: inherit; font-size: 13.5px; line-height: 1.62; color: #4F4459;
+    letter-spacing: -0.2px; word-break: keep-all;
+  }
+  textarea::placeholder { color: #BCAEC4; }
+  .compose-sub { font-size: 9.5px; color: #C0B2C8; margin: 6px 1px 0; letter-spacing: -.1px; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .tag {
+    font-family: inherit; font-size: 12px; font-weight: 600; color: #8A7186;
+    background: #FDF2F8; border: 1px solid #F3E3EE;
+    padding: 7px 12px; border-radius: 999px; cursor: pointer;
+    transition: transform .16s, background .2s, color .2s, box-shadow .2s, border-color .2s;
+  }
+  .tag:active { transform: scale(.94); }
+  .tag[aria-pressed="true"] {
+    color: #fff; border-color: transparent;
+    background: linear-gradient(135deg, #FFAEC6 0%, #D3A9F4 100%);
+    box-shadow: 0 6px 14px -4px rgba(238,150,196,.75);
+  }
+
+  .submit {
+    width: 100%; margin-top: 12px; padding: 14px 16px;
+    border: 0; border-radius: 17px; cursor: pointer;
+    font-family: inherit; font-size: 14.5px; font-weight: 700; letter-spacing: -0.2px;
+    color: #fff;
+    background: linear-gradient(100deg, #FFA6C0 0%, #D8A7F2 52%, #A9B8F3 100%);
+    box-shadow: 0 12px 24px -10px rgba(226,146,196,.95);
+    transition: transform .16s, box-shadow .2s, filter .2s;
+  }
+  .submit:active { transform: translateY(1px) scale(.99); }
+  .submit[disabled] {
+    cursor: default; color: #B5A6BD;
+    background: #F4ECF4; box-shadow: none;
+  }
+  .compose-note {
+    margin: 9px 0 0; text-align: center; font-size: 10.5px; color: #B0A2B9; letter-spacing: -0.1px;
+  }
+
+  /* ── 감정 필터 (sticky) ──────────────────────────── */
+  .filterbar {
+    position: sticky; top: 0; z-index: 4;
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 14px;
+    background: rgba(255,250,252,.9);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(226,205,222,.34);
+  }
+  .filter-ico { font-size: 12px; opacity: .8; flex: 0 0 auto; }
+  .filter-chips {
+    display: flex; gap: 6px; align-items: center;
+    overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    padding: 1px 0;
+  }
+  .filter-chips::-webkit-scrollbar { display: none; }
+  .fchip {
+    font-family: inherit; font-size: 11.5px; font-weight: 600; color: #8E7C96;
+    background: #FFFDFE; border: 1px solid #F1E2EC;
+    padding: 6px 11px; border-radius: 999px; cursor: pointer; white-space: nowrap;
+    transition: transform .14s, background .2s, color .2s, border-color .2s, box-shadow .2s;
+  }
+  .fchip:active { transform: scale(.94); }
+  .fchip[aria-pressed="true"] {
+    color: #fff; border-color: transparent;
+    background: linear-gradient(135deg,#F79FC0 0%,#C3A4F0 100%);
+    box-shadow: 0 5px 12px -4px rgba(226,150,196,.8);
+  }
+
+  /* ── 피드 ────────────────────────────────────────── */
+  .feed-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px 10px;
+  }
+  .feed-title { font-size: 14.5px; font-weight: 800; color: #574968; letter-spacing: -0.4px; display: flex; align-items: center; gap: 6px; }
+  .feed-title span.dot {
+    width: 7px; height: 7px; border-radius: 50%; background: #8FD9C2;
+    box-shadow: 0 0 0 0 rgba(143,217,194,.65); animation: pulse 2.4s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(143,217,194,.6) }
+    70% { box-shadow: 0 0 0 7px rgba(143,217,194,0) }
+    100% { box-shadow: 0 0 0 0 rgba(143,217,194,0) }
+  }
+  .feed-live { font-size: 10.5px; color: #A193AB; }
+
+  .card {
+    margin: 0 14px 12px; padding: 14px 14px 12px;
+    background: rgba(255,255,255,.82);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.95); border-radius: 22px;
+    box-shadow: 0 10px 26px -14px rgba(160,128,178,.5);
+    animation: rise .45s cubic-bezier(.2,.8,.3,1) both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(-10px) scale(.985) } to { opacity: 1; transform: none } }
+  .card.fresh {
+    border-color: #FFD3E2;
+    box-shadow: 0 0 0 3px rgba(255,214,229,.55), 0 12px 26px -14px rgba(160,128,178,.5);
+  }
+
+  .card-top { display: flex; align-items: center; gap: 8px; }
+  .avatar {
+    width: 32px; height: 32px; flex: 0 0 32px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 15px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.85);
+  }
+  .avatar.rose { background: linear-gradient(135deg,#FFD9E5,#FFEFF4); }
+  .avatar.lav  { background: linear-gradient(135deg,#E4DBFF,#F2EEFF); }
+  .avatar.mint { background: linear-gradient(135deg,#D6F0E9,#EDF8F5); }
+  .who { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .who b { font-size: 12.5px; font-weight: 700; color: #5D4F69; }
+  .who small { font-size: 10.5px; color: #A99BB2; }
+  .card-tag {
+    margin-left: auto; font-size: 10.5px; font-weight: 700; color: #C57FA4;
+    background: #FFF1F7; border: 1px solid #FBE1ED; padding: 5px 9px; border-radius: 999px;
+    white-space: nowrap;
+  }
+  .card-text {
+    margin: 10px 0 12px; font-size: 13.3px; line-height: 1.74; color: #4E4358;
+    letter-spacing: -0.15px; word-break: keep-all; overflow-wrap: anywhere;
+  }
+  .mine-badge {
+    display: inline-block; font-size: 10px; font-weight: 700; color: #B7779B;
+    background: #FFF0F7; border-radius: 6px; padding: 3px 7px; margin-bottom: 8px;
+  }
+
+  .reactions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .react {
+    font-family: inherit; font-size: 11.5px; font-weight: 600; color: #7F6D88;
+    background: #FBF3F9; border: 1px solid #F4E7F0;
+    padding: 8px 11px; border-radius: 999px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 4px;
+    transition: transform .14s, background .2s, color .2s, border-color .2s;
+  }
+  .react:active { transform: scale(.94); }
+  .react .n { font-variant-numeric: tabular-nums; opacity: .85; }
+  .react[data-on="1"][data-kind="hug"] { background: #FFE6EE; border-color: #FFC8D9; color: #D75C8C; }
+  .react[data-on="1"][data-kind="me"]  { background: #EAE5FF; border-color: #D6CBFB; color: #7E6BCB; }
+  .react[data-on="1"][data-kind="say"] { background: #E2F4EF; border-color: #C4E9DF; color: #3E9C84; }
+  .react .ico { font-size: 12.5px; line-height: 1; }
+  .pop { animation: pop .36s ease; }
+  @keyframes pop { 40% { transform: scale(1.18) } 100% { transform: scale(1) } }
+
+  .thread { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #F0E3EE; display: none; }
+  .thread.open { display: block; animation: rise .3s ease both; }
+  .bubble {
+    background: #FDF6FB; border-radius: 13px; padding: 8px 11px; margin-bottom: 6px;
+  }
+  .bubble.mine { background: #FFF3F8; }
+  .bubble b { display: block; font-size: 10.5px; font-weight: 700; color: #9A87A5; margin-bottom: 2px; }
+  .bubble.mine b { color: #C1749C; }
+  .bubble p { margin: 0; font-size: 12.3px; line-height: 1.6; color: #574A61; word-break: keep-all; overflow-wrap: anywhere; }
+  .say-row { display: flex; gap: 6px; margin-top: 8px; }
+  .say-row input {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 12.3px; color: #4F4459;
+    background: #FFFAFD; border: 1px solid #F3E4EE; border-radius: 12px;
+    padding: 10px 12px; outline: 0; transition: border-color .2s, box-shadow .2s;
+    -webkit-appearance: none; appearance: none;
+  }
+  .say-row input::placeholder { color: #C0B2C7; }
+  .say-row input:focus { border-color: #F7C4D8; box-shadow: 0 0 0 3px rgba(255,197,219,.3); }
+  .say-row button {
+    font-family: inherit; font-size: 11.5px; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg,#F7A8C4,#C7A9F2); border: 0; border-radius: 12px;
+    padding: 0 13px; cursor: pointer; white-space: nowrap;
+    box-shadow: 0 6px 14px -6px rgba(230,150,200,.9);
+  }
+  .say-row button:active { transform: scale(.96); }
+
+  .footnote {
+    margin: 4px 24px 18px; text-align: center; font-size: 10px; line-height: 1.7;
+    color: #B2A5BB; word-break: keep-all;
+  }
+  .footnote b { color: #9A88A8; }
+
+  /* ── 보조 헤더 (내 숲 / 받은 마음) ───────────────── */
+  .subhero {
+    position: relative;
+    padding: calc(28px + env(safe-area-inset-top, 0px)) 22px 30px;
+    background:
+      radial-gradient(115% 85% at 12% 0%, rgba(255,255,255,.78) 0%, rgba(255,255,255,0) 58%),
+      linear-gradient(158deg, #FFDCE8 0%, #EADDFF 56%, #DCEFF2 100%);
+    border-radius: 0 0 34px 34px;
+  }
+  .subhero .brand-name { font-size: 22px; }
+  .subhero .tagline { margin-top: 9px; font-size: 12.5px; }
+  .sub-meta {
+    display: flex; align-items: center; gap: 7px; margin-top: 14px;
+    font-size: 11.5px; font-weight: 700; color: #7A6484;
+    background: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.9);
+    padding: 7px 12px; border-radius: 999px; width: fit-content;
+    box-shadow: 0 4px 10px rgba(180,150,190,.14);
+  }
+  .sub-meta b { color: #C46E9B; font-variant-numeric: tabular-nums; }
+
+  /* ── 내 숲 ───────────────────────────────────────── */
+  .mine-wrap { padding: 18px 0 0; }
+  .mine-stats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .mine-stats span {
+    font-size: 10.5px; font-weight: 700; color: #8C7896;
+    background: #FDF4FA; border: 1px solid #F4E7F0;
+    padding: 6px 9px; border-radius: 999px;
+  }
+  .mini-link {
+    font-family: inherit; font-size: 11px; font-weight: 700; color: #C1749C;
+    background: #FFF2F8; border: 1px solid #FBE1ED; border-radius: 10px;
+    padding: 7px 11px; cursor: pointer;
+  }
+  .mini-link:active { transform: scale(.97); }
+  .mine-actions { display: flex; align-items: center; gap: 7px; }
+  .mini-link.ghost { color: #A08FB0; background: #FBF7FD; border-color: #F0E7F6; }
+  .mini-link.warn { color: #D1596F; background: #FFF1F4; border-color: #FBD6DE; }
+
+  /* ── 받은 마음 ───────────────────────────────────── */
+  .stat-card {
+    position: relative; z-index: 2;
+    margin: -16px 14px 0; padding: 18px 18px 16px;
+    background: linear-gradient(150deg, rgba(255,255,255,.95) 0%, rgba(255,246,251,.9) 55%, rgba(243,238,255,.9) 100%);
+    border: 1px solid rgba(255,255,255,.98); border-radius: 26px;
+    box-shadow: 0 18px 36px -16px rgba(166,130,182,.42), inset 0 1px 0 rgba(255,255,255,.9);
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: ""; position: absolute; width: 150px; height: 150px; right: -50px; top: -60px;
+    border-radius: 50%; background: radial-gradient(circle, rgba(255,190,214,.75), rgba(255,190,214,0) 70%);
+    pointer-events: none;
+  }
+  .stat-label { margin: 0; font-size: 11.5px; font-weight: 700; color: #8E7A99; letter-spacing: -.2px; }
+  .stat-big {
+    display: flex; align-items: baseline; gap: 4px; margin: 4px 0 14px;
+    font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -1.5px;
+    color: #D0699A;
+    animation: pop .45s ease;
+  }
+  .stat-big small { font-size: 13px; font-weight: 700; color: #B492A8; letter-spacing: 0; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stat-cell {
+    background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.95);
+    border-radius: 16px; padding: 10px 4px 8px; text-align: center;
+    box-shadow: 0 6px 14px -10px rgba(170,135,190,.6);
+  }
+  .stat-cell .sc-ico { display: block; font-size: 15px; margin-bottom: 3px; }
+  .stat-cell b { display: block; font-size: 15px; font-weight: 800; color: #6B5679; font-variant-numeric: tabular-nums; }
+  .stat-cell small { display: block; font-size: 9.5px; font-weight: 600; color: #A697AF; margin-top: 1px; }
+  .stat-note { margin: 11px 2px 0; font-size: 10.5px; line-height: 1.6; color: #B0A0BA; word-break: keep-all; }
+
+  .sec-head {
+    display: flex; align-items: center; gap: 7px;
+    margin: 22px 20px 9px;
+    font-size: 13px; font-weight: 800; color: #574968; letter-spacing: -.3px;
+  }
+  .sec-head .sec-ico { font-size: 15px; line-height: 1; opacity: .9; }
+  .sec-head .sec-n {
+    margin-left: auto; font-size: 10.5px; font-weight: 700; color: #B58AA4;
+    background: #FFF1F8; border: 1px solid #FBE1ED;
+    padding: 3px 8px; border-radius: 999px;
+  }
+  .echo, .hist {
+    margin: 0 14px 9px; padding: 12px 13px;
+    background: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.95);
+    border-radius: 18px; box-shadow: 0 8px 20px -14px rgba(160,128,178,.55);
+  }
+  .echo-quote {
+    font-size: 10.5px; line-height: 1.55; color: #B3A0BE; letter-spacing: -.1px;
+    padding-left: 8px; border-left: 2px solid #F6DCEA; margin-bottom: 8px;
+    word-break: keep-all;
+  }
+  .echo .bubble { margin-bottom: 0; }
+  .echo .bubble b { color: #A78CB5; }
+  .hist { display: flex; gap: 9px; align-items: flex-start; }
+  .hist .hist-ico { font-size: 15px; line-height: 1.2; flex: 0 0 auto; }
+  .hist-body { min-width: 0; }
+  .hist-body b { display: block; font-size: 11px; font-weight: 800; color: #8E76A0; margin-bottom: 3px; }
+  .hist-body p { margin: 0; font-size: 11.5px; line-height: 1.6; color: #5A4C66; word-break: keep-all; overflow-wrap: anywhere; }
+
+  /* ── 빈 상태 ─────────────────────────────────────── */
+  .big-empty {
+    margin: 18px 14px 0; padding: 32px 22px 28px; text-align: center;
+    background: rgba(255,255,255,.72);
+    border: 1px dashed rgba(219,190,222,.7); border-radius: 26px;
+  }
+  .empty-emoji {
+    font-size: 36px; line-height: 1; margin-bottom: 12px;
+    filter: drop-shadow(0 8px 14px rgba(190,150,200,.32));
+    animation: bob 6s ease-in-out infinite alternate;
+  }
+  .big-empty b { display: block; font-size: 14px; font-weight: 800; color: #5E5069; letter-spacing: -.3px; margin-bottom: 7px; }
+  .big-empty p { margin: 0 auto; max-width: 258px; font-size: 11.8px; line-height: 1.78; color: #A393AD; word-break: keep-all; }
+  .empty-btn {
+    margin-top: 16px; font-family: inherit; font-size: 12px; font-weight: 700; color: #fff;
+    background: linear-gradient(120deg,#FFA6C0 0%,#CDA8F3 100%);
+    border: 0; border-radius: 14px; padding: 12px 18px; cursor: pointer;
+    box-shadow: 0 10px 20px -10px rgba(226,146,196,.95);
+  }
+  .empty-btn:active { transform: translateY(1px) scale(.99); }
+  .small-empty {
+    margin: 0 14px 9px; padding: 18px 16px; text-align: center;
+    background: rgba(255,255,255,.55); border: 1px dashed rgba(219,190,222,.6); border-radius: 18px;
+    font-size: 11.5px; line-height: 1.7; color: #AEA0B8; word-break: keep-all;
+  }
+  .small-empty span { display: block; font-size: 18px; margin-bottom: 6px; opacity: .85; }
+
+  /* ── 하단 탭 ─────────────────────────────────────── */
+  .tabbar {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 6;
+    height: calc(66px + env(safe-area-inset-bottom, 0px)); padding-bottom: env(safe-area-inset-bottom);
+    display: flex; align-items: center;
+    background: rgba(255,251,253,.93);
+    -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
+    border-top: 1px solid rgba(214,186,214,.24);
+  }
+  .tab {
+    position: relative; flex: 1; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    font-family: inherit; font-size: 9.5px; font-weight: 600; color: #B7A9BF; letter-spacing: -0.2px;
+    background: none; border: 0; cursor: pointer; padding: 0;
+  }
+  .tab i { font-style: normal; font-size: 17px; filter: grayscale(.5); opacity: .8; transition: transform .2s, opacity .2s; }
+  .tab.on { color: #D96E9C; }
+  .tab.on i { filter: none; opacity: 1; transform: translateY(-1px); }
+  .tab-dot {
+    position: absolute; top: 11px; right: 50%; margin-right: -18px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: linear-gradient(135deg,#FF9DBD,#CFA4F2);
+    box-shadow: 0 0 0 2px rgba(255,251,253,.95), 0 2px 6px rgba(226,146,196,.7);
+    opacity: 0; transform: scale(.4); transition: opacity .25s, transform .25s;
+  }
+  .tab-dot.show { opacity: 1; transform: scale(1); }
+
+  /* ── 토스트 ──────────────────────────────────────── */
+  .toast {
+    position: absolute; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); z-index: 9;
+    transform: translate(-50%, 12px);
+    background: rgba(64,48,74,.92); color: #fff;
+    font-size: 12px; font-weight: 600; letter-spacing: -0.2px;
+    padding: 11px 17px; border-radius: 999px; white-space: nowrap;
+    opacity: 0; pointer-events: none; transition: opacity .28s, transform .28s;
+    box-shadow: 0 12px 26px -10px rgba(60,40,70,.6);
+    max-width: 320px; overflow: hidden; text-overflow: ellipsis;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* ── 실제 휴대폰에서는 화면 가득 ─────────────────── */
+  @media (max-width: 460px) {
+    body { padding: 0; background: #FFF7F1; overflow: hidden; height: 100vh; height: 100dvh; }
+    .phone {
+      width: 100%; height: 100vh; height: 100dvh; border-radius: 0; box-shadow: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cloud, .feed-title span.dot, .empty-emoji, .stat-big { animation: none; }
+    .card, .thread.open, .pop { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="sky" aria-hidden="true">
+    <span class="cloud c1">🫧</span>
+    <span class="cloud c2">☁️</span>
+    <span class="cloud c3">🫧</span>
+    <span class="cloud c4">🌿</span>
+  </div>
+
+  <!-- ── 홈 ─────────────────────────────────────────── -->
+  <section class="view active" id="view-home" aria-label="홈">
+    <header class="hero">
+      <div class="brand">
+        <span class="brand-emoji" aria-hidden="true">🫧</span>
+        <span class="brand-name">몽실숲</span>
+      </div>
+      <p class="tagline">아무에게도 못 한 말, 숲에 두고 가도 괜찮아요</p>
+      <div class="mini-chips">
+        <span class="mini">🔒 익명 보장</span>
+        <span class="mini">✨ 무료</span>
+        <span class="mini">🍃 몽실몽실 쉼터</span>
+      </div>
+    </header>
+
+    <section class="compose" aria-label="익명 고민 작성">
+      <div class="compose-top">
+        <span class="compose-label">지금 내 마음</span>
+        <span class="counter" id="counter">0 / 80</span>
+      </div>
+
+      <div class="input-wrap">
+        <textarea id="text" maxlength="80" rows="3"
+          placeholder="지금 가장 무거운 마음 한 줄을 적어보세요..."
+          aria-label="고민 한 줄"></textarea>
+        <p class="compose-sub">한 줄이면 충분해요 · 이름은 남지 않아요</p>
+      </div>
+
+      <div class="tags" role="group" aria-label="감정 태그">
+        <button class="tag" type="button" aria-pressed="false" data-tag="지침">지침</button>
+        <button class="tag" type="button" aria-pressed="false" data-tag="불안">불안</button>
+        <button class="tag" type="button" aria-pressed="false" data-tag="막막함">막막함</button>
+        <button class="tag" type="button" aria-pressed="false" data-tag="서운함">서운함</button>
+      </div>
+
+      <button class="submit" id="submit" type="button" disabled>익명으로 털어놓기</button>
+      <p class="compose-note">이름 없이 올라가요 · 지금 이 순간만의 마음이면 충분해요</p>
+    </section>
+
+    <div class="filterbar">
+      <span class="filter-ico" aria-hidden="true">🍃</span>
+      <div class="filter-chips" role="group" aria-label="감정별 모아보기">
+        <button class="fchip" type="button" data-filter="전체" aria-pressed="true">전체</button>
+        <button class="fchip" type="button" data-filter="지침" aria-pressed="false">지침</button>
+        <button class="fchip" type="button" data-filter="불안" aria-pressed="false">불안</button>
+        <button class="fchip" type="button" data-filter="막막함" aria-pressed="false">막막함</button>
+        <button class="fchip" type="button" data-filter="서운함" aria-pressed="false">서운함</button>
+      </div>
+    </div>
+
+    <section class="feed" aria-label="실시간 공감 피드">
+      <div class="feed-head">
+        <div class="feed-title"><span class="dot" aria-hidden="true"></span>실시간 공감 피드</div>
+        <div class="feed-live" id="feedLive">지금 3개의 마음이 머물러 있어요</div>
+      </div>
+      <div id="feedList"></div>
+    </section>
+
+    <p class="footnote">
+      몽실숲은 익명으로만 운영돼요.<br>
+      혼자 견디기 너무 무거운 밤이라면, <b>자살예방상담전화 109</b>에 전화해도 괜찮아요.
+    </p>
+  </section>
+
+  <!-- ── 내 숲 ──────────────────────────────────────── -->
+  <section class="view" id="view-mine" aria-label="내 숲">
+    <header class="subhero">
+      <div class="brand">
+        <span class="brand-emoji" aria-hidden="true">🌳</span>
+        <span class="brand-name">내 숲</span>
+      </div>
+      <p class="tagline">내가 조용히 심어둔 마음들</p>
+      <div class="sub-meta">🌱 심은 마음 <b id="mineCount">0</b>개</div>
+    </header>
+    <div class="mine-wrap" id="mineList"></div>
+  </section>
+
+  <!-- ── 받은 마음 ──────────────────────────────────── -->
+  <section class="view" id="view-hearts" aria-label="받은 마음">
+    <header class="subhero">
+      <div class="brand">
+        <span class="brand-emoji" aria-hidden="true">💗</span>
+        <span class="brand-name">받은 마음</span>
+      </div>
+      <p class="tagline">숲이 나에게 건넨 마음들이에요</p>
+    </header>
+    <div id="heartsBody"></div>
+  </section>
+
+  <nav class="tabbar" role="tablist" aria-label="메뉴">
+    <button class="tab on" type="button" role="tab" aria-selected="true" data-tab="home"><i aria-hidden="true">🏠</i>홈</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-tab="mine"><i aria-hidden="true">🌳</i>내 숲</button>
+    <button class="tab" type="button" role="tab" aria-selected="false" data-tab="hearts"><i aria-hidden="true">💗</i>받은 마음<span class="tab-dot" id="tabDot"></span></button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ── 기본 데이터 ─────────────────────────────────── */
+  var KEY = "mongsilForest.v1";
+  var MAX = 80;
+  var SAY_MAX = 60;
+  var ME_NAME = "숲속의 나";
+  var FILTERS = ["전체", "지침", "불안", "막막함", "서운함"];
+
+  var SEED = [
+    {
+      id: "s1", mine: false, name: "익명의 다람쥐", emoji: "🐿️", tone: "rose",
+      time: "3분 전", tags: ["지침"],
+      text: "알바 끝나고 집에 오는 버스에서 자꾸 눈물이 났어. 별일도 아닌데 하루 종일 웃느라 얼굴이 굳은 것 같아서. 엄마한테는 \"오늘 좀 힘들었어\" 한마디도 못 했어. 괜히 걱정시킬까 봐.",
+      hug: 12, me: 8,
+      replies: [
+        { name: "숲속 구름", text: "그 버스에서 혼자 버틴 것만으로도 오늘 진짜 잘한 거예요. 집 가면 아무것도 안 해도 돼요." },
+        { name: "밤의 숲지기", text: "얼굴 굳는 그 느낌 저도 알아요. 도착하면 제일 편한 옷부터 입어요. 그게 시작이에요." },
+        { name: "몽실 23", text: "엄마한테 말 못 한 그 마음도 충분히 이해돼요. 여기다 다 쏟아놓고 가요." }
+      ]
+    },
+    {
+      id: "s2", mine: false, name: "숲속 구름", emoji: "🌙", tone: "lav",
+      time: "11분 전", tags: ["불안"],
+      text: "내일 면접인데 연습한 대답이 자꾸 머리에서 지워져. 떨어지면 나는 뭐가 되는 걸까 싶어서 새벽까지 뒤척였어. 그래도 여기까지 준비한 나한테는 잘했다고 해주고 싶어.",
+      hug: 24, me: 19,
+      replies: [
+        { name: "익명의 다람쥐", text: "떨어져도 당신이 달라지는 건 아니에요. 준비한 시간은 남아요." },
+        { name: "몽실 07", text: "저도 면접 전날엔 늘 그랬어요. 첫 질문만 편하게 말해도 반은 된 거예요. 잘 다녀와요!" }
+      ]
+    },
+    {
+      id: "s3", mine: false, name: "밤의 숲지기", emoji: "🦉", tone: "mint",
+      time: "28분 전", tags: ["막막함"],
+      text: "친구들은 다들 갈 길이 정해진 것처럼 보이는데 나만 제자리에 서 있는 기분. 뭘 좋아하는지도 잘 모르겠어. 이런 나도 언젠가 괜찮아질 수 있을까?",
+      hug: 31, me: 15,
+      replies: [
+        { name: "숲속 구름", text: "스무 살에 다 정해져 있는 사람은 없어요. 저는 서른인데도 다시 찾는 중이에요." }
+      ]
+    }
+  ];
+
+  var FOREST_NAMES = ["익명의 다람쥐", "숲속 구름", "밤의 숲지기", "몽실 07", "숲속 고슴도치"];
+  var FOREST_SAYS = [
+    "그 마음 여기 두고 가요. 오늘 하루 진짜 수고했어요.",
+    "저도 같은 마음이었어요. 혼자 버틴 거 알아요.",
+    "천천히 가도 괜찮아요. 숲은 기다려 줄 거예요.",
+    "한 줄 적어낸 것만으로도 대단한 거예요.",
+    "따뜻한 차 한 잔 하고, 오늘은 조금 일찍 눕기로 해요."
+  ];
+
+  /* ── 상태 ────────────────────────────────────────── */
+  var state = loadState();
+  var activeTab = "home";
+  var activeFilter = "전체";
+  var drafts = {};
+  var openThreads = {};
+  var pendingDrop = null;
+
+  var feedList = document.getElementById("feedList");
+  var mineList = document.getElementById("mineList");
+  var mineCount = document.getElementById("mineCount");
+  var heartsBody = document.getElementById("heartsBody");
+  var textEl = document.getElementById("text");
+  var submitEl = document.getElementById("submit");
+  var counterEl = document.getElementById("counter");
+  var toastEl = document.getElementById("toast");
+  var tabDot = document.getElementById("tabDot");
+  var feedLive = document.getElementById("feedLive");
+
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  function newId() {
+    return "p" + Date.now().toString(36) + Math.floor(Math.random() * 900 + 100);
+  }
+
+  function normalize(d) {
+    if (!d || !Array.isArray(d.posts)) return null;
+    var out = { v: 1, posts: [], reacted: d.reacted && typeof d.reacted === "object" ? d.reacted : {} };
+    d.posts.forEach(function (p) {
+      if (!p || typeof p !== "object" || typeof p.text !== "string") return;
+      out.posts.push({
+        id: p.id || newId(),
+        mine: !!p.mine,
+        name: p.name || ME_NAME,
+        emoji: p.emoji || "🫧",
+        tone: p.tone || "rose",
+        time: p.time || "",
+        createdAt: p.createdAt || null,
+        tags: Array.isArray(p.tags) && p.tags.length ? p.tags : ["그냥"],
+        text: p.text,
+        hug: typeof p.hug === "number" ? p.hug : 0,
+        me: typeof p.me === "number" ? p.me : 0,
+        replies: Array.isArray(p.replies) ? p.replies.filter(function (r) { return r && typeof r.text === "string"; }).map(function (r) {
+          return { name: r.name || "숲속 누군가", text: r.text, mine: !!r.mine };
+        }) : []
+      });
+    });
+    return out;
+  }
+
+  function loadState() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var parsed = normalize(JSON.parse(raw));
+        if (parsed && parsed.posts.length) return parsed;
+      }
+    } catch (e) {}
+    return { v: 1, posts: clone(SEED), reacted: {} };
+  }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function postById(id) {
+    for (var i = 0; i < state.posts.length; i++) {
+      if (state.posts[i].id === id) return state.posts[i];
+    }
+    return null;
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  var toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 2200);
+  }
+
+  function timeAgo(ts) {
+    var d = Math.floor((Date.now() - ts) / 1000);
+    if (d < 60) return "방금 전";
+    if (d < 3600) return Math.floor(d / 60) + "분 전";
+    if (d < 86400) return Math.floor(d / 3600) + "시간 전";
+    return Math.floor(d / 86400) + "일 전";
+  }
+
+  function whenText(p) {
+    if (p.createdAt) return timeAgo(p.createdAt);
+    return p.time || "방금 전";
+  }
+
+  function isOn(p, kind) {
+    return !!(state.reacted[p.id] && state.reacted[p.id][kind]);
+  }
+
+  /* ── 카드 렌더 ───────────────────────────────────── */
+  function reactBtn(p, kind, offIco, onIco, label) {
+    var on = isOn(p, kind);
+    return '<button class="react" type="button" data-act="react" data-kind="' + kind + '"' +
+      ' data-on="' + (on ? 1 : 0) + '" aria-pressed="' + (on ? "true" : "false") + '"' +
+      ' aria-label="' + label + ' ' + p[kind] + '개">' +
+      '<span class="ico">' + (on ? onIco : offIco) + "</span>" + label +
+      ' <span class="n">' + p[kind] + "</span></button>";
+  }
+
+  function threadHTML(p, open) {
+    var bubbles = p.replies.map(function (r) {
+      return '<div class="bubble' + (r.mine ? " mine" : "") + '"><b>' + esc(r.name) + "</b><p>" + esc(r.text) + "</p></div>";
+    }).join("");
+    var dv = drafts[p.id] ? esc(drafts[p.id]) : "";
+    return '<div class="thread' + (open ? " open" : "") + '">' + bubbles +
+      '<div class="say-row">' +
+        '<input class="say-input" type="text" maxlength="' + SAY_MAX + '" value="' + dv + '"' +
+          ' placeholder="따뜻한 한마디 남겨주세요..." aria-label="따뜻한 한마디">' +
+        '<button type="button" data-act="send">남기기</button>' +
+      "</div></div>";
+  }
+
+  function cardHTML(p) {
+    var open = !!openThreads[p.id];
+    return '<article class="card" data-id="' + p.id + '">' +
+      (p.mine ? '<span class="mine-badge">🌱 내가 심은 마음</span>' : "") +
+      '<div class="card-top">' +
+        '<span class="avatar ' + p.tone + '" aria-hidden="true">' + p.emoji + "</span>" +
+        '<div class="who"><b>' + esc(p.name) + "</b><small>" + esc(whenText(p)) + "</small></div>" +
+        '<span class="card-tag">' + esc(p.tags[0] || "그냥") + "</span>" +
+      "</div>" +
+      '<p class="card-text">' + esc(p.text) + "</p>" +
+      '<div class="reactions">' +
+        reactBtn(p, "hug", "🤍", "💗", "토닥토닥") +
+        reactBtn(p, "me", "🫂", "🫂", "나도 그래") +
+        '<button class="react" type="button" data-act="say" data-kind="say" data-on="' + (open ? 1 : 0) + '"' +
+          ' aria-pressed="' + (open ? "true" : "false") + '" aria-label="따뜻한 한마디 ' + p.replies.length + '개">' +
+          '<span class="ico">💬</span>따뜻한 한마디 <span class="n">' + p.replies.length + "</span></button>" +
+      "</div>" +
+      threadHTML(p, open) +
+      "</article>";
+  }
+
+  /* ── 홈 ──────────────────────────────────────────── */
+  function filteredPosts() {
+    if (activeFilter === "전체") return state.posts;
+    return state.posts.filter(function (p) { return p.tags.indexOf(activeFilter) >= 0; });
+  }
+
+  function setFeedLive(n) {
+    if (activeFilter === "전체") {
+      feedLive.textContent = "지금 " + state.posts.length + "개의 마음이 머물러 있어요";
+    } else {
+      feedLive.textContent = activeFilter + " 마음 " + n + "개";
+    }
+  }
+
+  function renderHome() {
+    var arr = filteredPosts();
+    setFeedLive(arr.length);
+    if (!arr.length) {
+      feedList.innerHTML =
+        '<div class="big-empty">' +
+          '<div class="empty-emoji">🍃</div>' +
+          "<b>아직 이 감정의 마음은 없어요</b>" +
+          "<p>숲이 조용하네요. 지금 그 마음이 있다면, 첫 번째로 적어봐도 괜찮아요.</p>" +
+        "</div>";
+      return;
+    }
+    feedList.innerHTML = arr.map(cardHTML).join("");
+  }
+
+  function renderMine() {
+    var mine = state.posts.filter(function (p) { return p.mine; });
+    mineCount.textContent = mine.length;
+    if (!mine.length) {
+      mineList.innerHTML =
+        '<div class="big-empty">' +
+          '<div class="empty-emoji">🌱</div>' +
+          "<b>아직 심은 마음이 없어요</b>" +
+          "<p>지금 마음 한 줄을 적어 숲에 심어보세요.<br>아무도 이름을 묻지 않아요.</p>" +
+          '<button class="empty-btn" type="button" data-goto="home">🫧 마음 심으러 가기</button>' +
+        "</div>" +
+        '<p class="footnote">심은 마음은 이 기기에만 저장돼요.</p>';
+      return;
+    }
+    mineList.innerHTML = mine.map(function (p) {
+      var conf = pendingDrop && pendingDrop.id === p.id && Date.now() < pendingDrop.until;
+      return '<article class="card" data-id="' + p.id + '">' +
+        '<span class="mine-badge">🌱 내가 심은 마음</span>' +
+        '<div class="card-top">' +
+          '<span class="avatar ' + p.tone + '" aria-hidden="true">' + p.emoji + "</span>" +
+          '<div class="who"><b>' + esc(p.name) + "</b><small>" + esc(whenText(p)) + "</small></div>" +
+          '<span class="card-tag">' + esc(p.tags[0] || "그냥") + "</span>" +
+        "</div>" +
+        '<p class="card-text">' + esc(p.text) + "</p>" +
+        '<div class="mine-stats">' +
+          "<span>🤍 토닥토닥 " + p.hug + "</span>" +
+          "<span>🫂 나도 그래 " + p.me + "</span>" +
+          "<span>💬 한마디 " + p.replies.length + "</span>" +
+        "</div>" +
+        '<div class="mine-actions">' +
+          '<button class="mini-link" type="button" data-goto="home" data-focus="' + p.id + '">홈에서 보기 →</button>' +
+          '<button class="mini-link ghost' + (conf ? " warn" : "") + '" type="button" data-act="drop" data-id="' + p.id + '"' +
+            ' data-confirm="' + (conf ? 1 : 0) + '">' + (conf ? "정말 내릴까요?" : "🌿 내리기") + "</button>" +
+        "</div>" +
+        "</article>";
+    }).join("") +
+      '<p class="footnote">심은 마음은 이 기기에만 저장돼요.</p>';
+  }
+
+  /* ── 받은 마음 ───────────────────────────────────── */
+  function receivedStats() {
+    var hug = 0, me = 0, says = 0, mine = [], comments = [], given = [], givenSays = [];
+    state.posts.forEach(function (p) {
+      if (p.mine) {
+        mine.push(p);
+        hug += p.hug;
+        me += p.me;
+        p.replies.forEach(function (r) {
+          if (r.mine) return;
+          says++;
+          comments.push({ p: p, r: r });
+        });
+      }
+      var rx = state.reacted[p.id];
+      if (rx) {
+        if (rx.hug) given.push({ p: p, ico: "🤍", label: "토닥토닥" });
+        if (rx.me) given.push({ p: p, ico: "🫂", label: "나도 그래" });
+      }
+      p.replies.forEach(function (r) {
+        if (r.mine) givenSays.push({ p: p, r: r });
+      });
+    });
+    return { hug: hug, me: me, says: says, total: hug + me, mine: mine, comments: comments, given: given, givenSays: givenSays };
+  }
+
+  function excerpt(t) {
+    t = String(t).replace(/\s+/g, " ").trim();
+    return t.length > 46 ? t.slice(0, 46) + "…" : t;
+  }
+
+  function renderHearts() {
+    var s = receivedStats();
+    var html = "";
+
+    if (!s.mine.length) {
+      html +=
+        '<div class="big-empty">' +
+          '<div class="empty-emoji">🫧</div>' +
+          "<b>아직 받은 마음이 없어요</b>" +
+          "<p>아직 숲에 심은 마음이 없어서 받은 마음도 없어요.<br>홈에서 마음을 한 줄 심어보면, 숲속의 누군가가 토닥여 줄 거예요.</p>" +
+          '<button class="empty-btn" type="button" data-goto="home">🌱 마음 심으러 가기</button>' +
+        "</div>";
+    } else {
+      html +=
+        '<div class="stat-card">' +
+          '<p class="stat-label">지금까지 내가 받은 마음</p>' +
+          '<div class="stat-big"><span>' + s.total + "</span><small>개</small></div>" +
+          '<div class="stat-grid">' +
+            '<div class="stat-cell"><span class="sc-ico">🤍</span><b>' + s.hug + "</b><small>토닥토닥</small></div>" +
+            '<div class="stat-cell"><span class="sc-ico">🫂</span><b>' + s.me + "</b><small>나도 그래</small></div>" +
+            '<div class="stat-cell"><span class="sc-ico">💬</span><b>' + s.says + "</b><small>한마디</small></div>" +
+          "</div>" +
+          '<p class="stat-note">' +
+            (s.total + s.says === 0
+              ? "아직은 조용한 숲이에요. 곧 누군가가 마음을 알아봐 줄 거예요."
+              : "내가 심은 마음 " + s.mine.length + "개에 숲이 답해줬어요.") +
+          "</p>" +
+        "</div>";
+    }
+
+    /* 내 글에 달린 한마디 */
+    html += '<div class="sec-head"><span class="sec-ico" aria-hidden="true">💌</span>내 글에 달린 따뜻한 한마디<span class="sec-n">' + s.says + "</span></div>";
+    if (s.comments.length) {
+      s.comments.slice().reverse().forEach(function (c) {
+        html +=
+          '<div class="echo">' +
+            '<div class="echo-quote">“' + esc(excerpt(c.p.text)) + "”</div>" +
+            '<div class="bubble"><b>' + esc(c.r.name) + "</b><p>" + esc(c.r.text) + "</p></div>" +
+          "</div>";
+      });
+    } else {
+      html += '<div class="small-empty"><span aria-hidden="true">💬</span>아직 내 글에 한마디가 없어요.<br>조금만 기다리면 숲속 친구들이 말을 걸어올 거예요.</div>';
+    }
+
+    /* 내가 누른 공감 */
+    html += '<div class="sec-head"><span class="sec-ico" aria-hidden="true">🤍</span>내가 누른 공감<span class="sec-n">' + s.given.length + "</span></div>";
+    if (s.given.length) {
+      s.given.forEach(function (g) {
+        html +=
+          '<div class="hist">' +
+            '<span class="hist-ico" aria-hidden="true">' + g.ico + "</span>" +
+            '<div class="hist-body"><b>' + g.label + "</b><p>“" + esc(excerpt(g.p.text)) + "”</p></div>" +
+          "</div>";
+      });
+    } else {
+      html += '<div class="small-empty"><span aria-hidden="true">🍃</span>아직 누른 공감이 없어요.<br>홈에서 마음에 토닥토닥을 눌러보세요.</div>';
+    }
+
+    /* 내가 건넨 한마디 */
+    html += '<div class="sec-head"><span class="sec-ico" aria-hidden="true">✍️</span>내가 건넨 한마디<span class="sec-n">' + s.givenSays.length + "</span></div>";
+    if (s.givenSays.length) {
+      s.givenSays.slice().reverse().forEach(function (g) {
+        html +=
+          '<div class="hist">' +
+            '<span class="hist-ico" aria-hidden="true">💬</span>' +
+            '<div class="hist-body"><b>' + esc(g.p.name) + "님의 마음에</b><p>“" + esc(g.r.text) + "”</p></div>" +
+          "</div>";
+      });
+    } else {
+      html += '<div class="small-empty"><span aria-hidden="true">🕊️</span>아직 건넨 한마디가 없어요.<br>누군가의 마음에 따뜻한 한마디를 남겨보세요.</div>';
+    }
+
+    html += '<p class="footnote">심은 마음과 받은 마음은 이 기기에만 저장돼요.<br>지금은 데모 버전이라, 내가 쓴 글에 오는 반응이 숲속 친구들이 보낸 것처럼 자동으로 도착해요.</p>';
+    heartsBody.innerHTML = html;
+  }
+
+  function updateTabDot() {
+    var s = receivedStats();
+    if (s.total + s.says > 0) tabDot.classList.add("show");
+    else tabDot.classList.remove("show");
+  }
+
+  function refreshCurrent() {
+    if (activeTab !== "mine" && activeTab !== "hearts") return;
+    var v = document.getElementById(activeTab === "mine" ? "view-mine" : "view-hearts");
+    var st = v ? v.scrollTop : 0;
+    if (activeTab === "mine") renderMine();
+    else renderHearts();
+    if (v) v.scrollTop = st;
+  }
+
+  /* ── 탭 ──────────────────────────────────────────── */
+  function switchTab(name) {
+    if (name === activeTab) {
+      var cur = document.getElementById("view-" + name);
+      if (cur) cur.scrollTop = 0;
+      return;
+    }
+    activeTab = name;
+    ["home", "mine", "hearts"].forEach(function (t) {
+      var v = document.getElementById("view-" + t);
+      if (v) v.classList.toggle("active", t === name);
+    });
+    document.querySelectorAll(".tab").forEach(function (t) {
+      var on = t.dataset.tab === name;
+      t.classList.toggle("on", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    if (name === "home") {
+      activeFilter = "전체";
+      syncFilterChips();
+      renderHome();
+    }
+    if (name === "mine") renderMine();
+    if (name === "hearts") renderHearts();
+    var view = document.getElementById("view-" + name);
+    if (view) view.scrollTop = 0;
+  }
+
+  /* ── 필터 ────────────────────────────────────────── */
+  function syncFilterChips() {
+    document.querySelectorAll(".fchip").forEach(function (b) {
+      b.setAttribute("aria-pressed", b.dataset.filter === activeFilter ? "true" : "false");
+    });
+  }
+
+  document.querySelectorAll(".fchip").forEach(function (b) {
+    b.addEventListener("click", function () {
+      activeFilter = b.dataset.filter;
+      syncFilterChips();
+      renderHome();
+      var v = document.getElementById("view-home");
+      if (v) {
+        var bar = document.querySelector(".filterbar");
+        var top = bar ? bar.offsetTop + bar.offsetHeight : 0;
+        if (v.scrollTop > top) v.scrollTop = top;
+      }
+    });
+  });
+
+  /* ── 반응 / 한마디 ───────────────────────────────── */
+  function paintReact(btn, kind, n, on) {
+    btn.dataset.on = on ? "1" : "0";
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    var num = btn.querySelector(".n");
+    if (num) num.textContent = n;
+    var ico = btn.querySelector(".ico");
+    if (ico) ico.textContent = kind === "hug" ? (on ? "💗" : "🤍") : "🫂";
+    btn.setAttribute("aria-label", (kind === "hug" ? "토닥토닥" : "나도 그래") + " " + n + "개");
+    btn.classList.remove("pop");
+    void btn.offsetWidth;
+    btn.classList.add("pop");
+  }
+
+  function toggleReact(p, card, btn) {
+    var kind = btn.dataset.kind;
+    var on = btn.dataset.on === "1";
+    state.reacted[p.id] = state.reacted[p.id] || {};
+    if (on) {
+      p[kind] = Math.max(0, p[kind] - 1);
+      delete state.reacted[p.id][kind];
+    } else {
+      p[kind] = p[kind] + 1;
+      state.reacted[p.id][kind] = true;
+    }
+    if (!Object.keys(state.reacted[p.id]).length) delete state.reacted[p.id];
+    paintReact(btn, kind, p[kind], !on);
+    save();
+    updateTabDot();
+    if (!on) {
+      if (kind === "hug") toast("마음이 따뜻해졌어요 🤍");
+      else toast("혼자가 아니에요 🫂");
+    }
+  }
+
+  function toggleThread(p, card, btn) {
+    var thread = card.querySelector(".thread");
+    if (!thread) return;
+    var willOpen = !thread.classList.contains("open");
+    thread.classList.toggle("open", willOpen);
+    openThreads[p.id] = willOpen;
+    btn.dataset.on = willOpen ? "1" : "0";
+    btn.setAttribute("aria-pressed", willOpen ? "true" : "false");
+    if (willOpen) {
+      var input = thread.querySelector("input");
+      setTimeout(function () {
+        try { thread.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {}
+      }, 60);
+      try { input.focus({ preventScroll: true }); } catch (e) { try { input.focus(); } catch (e2) {} }
+    }
+  }
+
+  function sendSay(card) {
+    var p = postById(card.dataset.id);
+    if (!p) return;
+    var input = card.querySelector(".say-input");
+    if (!input) return;
+    var v = input.value.trim();
+    if (!v) { try { input.focus(); } catch (e) {} return; }
+    p.replies.push({ name: ME_NAME, text: v, mine: true });
+    delete drafts[p.id];
+    input.value = "";
+    var thread = card.querySelector(".thread");
+    var b = document.createElement("div");
+    b.className = "bubble mine";
+    b.innerHTML = "<b>" + esc(ME_NAME) + "</b><p>" + esc(v) + "</p>";
+    var row = thread.querySelector(".say-row");
+    thread.insertBefore(b, row);
+    thread.classList.add("open");
+    openThreads[p.id] = true;
+    var sayBtn = card.querySelector('[data-kind="say"]');
+    if (sayBtn) {
+      sayBtn.querySelector(".n").textContent = p.replies.length;
+      sayBtn.dataset.on = "1";
+      sayBtn.setAttribute("aria-pressed", "true");
+      sayBtn.setAttribute("aria-label", "따뜻한 한마디 " + p.replies.length + "개");
+    }
+    save();
+    refreshCurrent();
+    updateTabDot();
+    toast("따뜻한 한마디를 남겼어요 🤍");
+  }
+
+  feedList.addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    var card = btn.closest(".card");
+    if (!card) return;
+    var p = postById(card.dataset.id);
+    if (!p) return;
+    if (btn.dataset.act === "say") toggleThread(p, card, btn);
+    else if (btn.dataset.act === "send") sendSay(card);
+    else if (btn.dataset.act === "react") toggleReact(p, card, btn);
+  });
+
+  feedList.addEventListener("input", function (e) {
+    var t = e.target;
+    if (t && t.classList && t.classList.contains("say-input")) {
+      var card = t.closest(".card");
+      if (card) drafts[card.dataset.id] = t.value;
+    }
+  });
+
+  feedList.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && e.target && e.target.classList && e.target.classList.contains("say-input")) {
+      e.preventDefault();
+      var card = e.target.closest(".card");
+      if (card) sendSay(card);
+    }
+  });
+
+  /* 내 숲: 내가 심은 마음 내리기 (두 번 눌러 확인) */
+  mineList.addEventListener("click", function (e) {
+    var btn = e.target.closest('[data-act="drop"]');
+    if (!btn) return;
+    var p = postById(btn.dataset.id);
+    if (!p) return;
+    if (btn.dataset.confirm !== "1") {
+      btn.dataset.confirm = "1";
+      btn.textContent = "정말 내릴까요?";
+      btn.classList.add("warn");
+      var pid = p.id;
+      pendingDrop = { id: pid, until: Date.now() + 6000 };
+      clearTimeout(btn._t);
+      btn._t = setTimeout(function () {
+        if (!pendingDrop || pendingDrop.id !== pid) return;
+        pendingDrop = null;
+        if (!btn.isConnected) return;
+        btn.dataset.confirm = "0";
+        btn.textContent = "🌿 내리기";
+        btn.classList.remove("warn");
+      }, 6000);
+      return;
+    }
+    pendingDrop = null;
+    state.posts = state.posts.filter(function (x) { return x.id !== p.id; });
+    delete state.reacted[p.id];
+    delete drafts[p.id];
+    delete openThreads[p.id];
+    save();
+    renderMine();
+    renderHome();
+    updateTabDot();
+    toast("마음을 숲에서 조용히 내렸어요 🌿");
+  });
+
+  /* ── 작성 ────────────────────────────────────────── */
+  function syncCompose() {
+    var n = textEl.value.length;
+    counterEl.textContent = n + " / " + MAX;
+    submitEl.disabled = textEl.value.trim().length === 0;
+    textEl.style.height = "auto";
+    textEl.style.height = Math.min(140, Math.max(66, textEl.scrollHeight)) + "px";
+  }
+  textEl.addEventListener("input", syncCompose);
+
+  document.querySelectorAll(".compose .tag").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var on = b.getAttribute("aria-pressed") === "true";
+      b.setAttribute("aria-pressed", on ? "false" : "true");
+    });
+  });
+
+  function pickedTags() {
+    return Array.prototype.slice.call(document.querySelectorAll(".compose .tag"))
+      .filter(function (b) { return b.getAttribute("aria-pressed") === "true"; })
+      .map(function (b) { return b.dataset.tag; });
+  }
+
+  function clearCompose() {
+    textEl.value = "";
+    document.querySelectorAll(".compose .tag").forEach(function (b) {
+      b.setAttribute("aria-pressed", "false");
+    });
+    syncCompose();
+  }
+
+  submitEl.addEventListener("click", function () {
+    var v = textEl.value.trim();
+    if (!v) return;
+    var picked = pickedTags();
+    var p = {
+      id: newId(), mine: true, name: ME_NAME, emoji: "🫧", tone: "rose",
+      time: "", createdAt: Date.now(),
+      tags: picked.length ? picked : ["그냥"],
+      text: v, hug: 0, me: 0, replies: []
+    };
+    state.posts.unshift(p);
+    activeFilter = "전체";
+    syncFilterChips();
+    save();
+    renderHome();
+    clearCompose();
+    updateTabDot();
+
+    var el = feedList.querySelector('[data-id="' + p.id + '"]');
+    if (el) {
+      el.classList.add("fresh");
+      setTimeout(function () {
+        try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) {}
+      }, 120);
+      setTimeout(function () { el.classList.remove("fresh"); }, 1800);
+    }
+    toast("마음이 숲에 잘 심어졌어요 🫧");
+    scheduleForestReplies(p);
+  });
+
+  /* ── 데모: 숲속 친구들의 반응 ────────────────────── */
+  function findCard(id) {
+    return feedList.querySelector('[data-id="' + id + '"]');
+  }
+
+  function forestHug(p, kind, name) {
+    if (!postById(p.id)) return;
+    p[kind] = p[kind] + 1;
+    save();
+    var card = findCard(p.id);
+    if (card) {
+      var btn = card.querySelector('[data-kind="' + kind + '"]');
+      if (btn) paintReact(btn, kind, p[kind], btn.dataset.on === "1");
+    }
+    refreshCurrent();
+    updateTabDot();
+    toast(name + " 님이 " + (kind === "hug" ? "토닥였어요 🤍" : "나도 그래 했어요 🫂"));
+  }
+
+  function forestSay(p) {
+    if (!postById(p.id)) return;
+    var name = FOREST_NAMES[Math.floor(Math.random() * FOREST_NAMES.length)];
+    var text = FOREST_SAYS[Math.floor(Math.random() * FOREST_SAYS.length)];
+    p.replies.push({ name: name, text: text, mine: false });
+    save();
+    var card = findCard(p.id);
+    if (card) {
+      var thread = card.querySelector(".thread");
+      var b = document.createElement("div");
+      b.className = "bubble";
+      b.innerHTML = "<b>" + esc(name) + "</b><p>" + esc(text) + "</p>";
+      var row = thread.querySelector(".say-row");
+      if (row) thread.insertBefore(b, row);
+      var sayBtn = card.querySelector('[data-kind="say"]');
+      if (sayBtn) {
+        sayBtn.querySelector(".n").textContent = p.replies.length;
+        sayBtn.setAttribute("aria-label", "따뜻한 한마디 " + p.replies.length + "개");
+      }
+    }
+    refreshCurrent();
+    updateTabDot();
+    toast("💌 " + name + " 님이 한마디를 남겼어요");
+  }
+
+  function scheduleForestReplies(p) {
+    setTimeout(function () { forestHug(p, "hug", "익명의 다람쥐"); }, 3200);
+    setTimeout(function () { forestHug(p, "me", "숲속 구름"); }, 6400);
+    setTimeout(function () { forestSay(p); }, 9600);
+  }
+
+  /* ── 탭 / 이동 버튼 ──────────────────────────────── */
+  document.querySelectorAll(".tab").forEach(function (t) {
+    t.addEventListener("click", function () { switchTab(t.dataset.tab); });
+  });
+
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-goto]");
+    if (!g) return;
+    var tab = g.dataset.goto;
+    switchTab(tab);
+    var focusId = g.dataset.focus;
+    if (focusId) {
+      activeFilter = "전체";
+      syncFilterChips();
+      renderHome();
+      setTimeout(function () {
+        var el = findCard(focusId);
+        if (el) {
+          try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (err) {}
+          el.classList.add("fresh");
+          setTimeout(function () { el.classList.remove("fresh"); }, 1800);
+        }
+      }, 90);
+    } else if (tab === "home") {
+      setTimeout(function () {
+        try { textEl.focus({ preventScroll: true }); } catch (err) {}
+      }, 260);
+    }
+  });
+
+  /* ── 첫 렌더 ─────────────────────────────────────── */
+  renderHome();
+  renderMine();
+  renderHearts();
+  syncCompose();
+  updateTabDot();
+
+  // 로드 시각 기준으로 "방금 전" 등이 자연스럽게 갱신되도록
+  setInterval(function () {
+    if (activeTab === "home" || activeTab === "mine") {
+      var mineCards = document.querySelectorAll('[data-id^="p"] .who small');
+      if (mineCards.length) {
+        Array.prototype.forEach.call(mineCards, function (el) {
+          var card = el.closest(".card");
+          if (!card) return;
+          var p = postById(card.dataset.id);
+          if (p && p.createdAt) el.textContent = timeAgo(p.createdAt);
+        });
+      }
+    }
+  }, 60000);
+})();
+</script>
+</body>
+</html>

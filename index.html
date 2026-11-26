@@ -1594,13 +1594,13 @@
   }
   .draw-canvas[hidden] { display: none; }
   .ctabs {
-    display: flex; flex-wrap: wrap; gap: 4px; margin: 4px 0 2px; padding: 2px 1px;
+    display: flex; flex-wrap: wrap; gap: 3px; margin: 4px 0 2px; padding: 2px 1px;
   }
   .ctab {
-    flex: 0 0 auto; font-family: inherit; font-size: 10.5px; font-weight: 800;
+    flex: 0 0 auto; font-family: inherit; font-size: 10px; font-weight: 800;
     color: #A08FB0; background: #FBF5FB; border: 1px solid #F1E4EF;
-    border-radius: 999px; padding: 6px 9px; cursor: pointer; white-space: nowrap;
-    letter-spacing: -.2px;
+    border-radius: 999px; padding: 6px 7px; cursor: pointer; white-space: nowrap;
+    letter-spacing: -.3px;
   }
   .ctab:active { transform: scale(.96); }
   .ctab[aria-pressed="true"] {
@@ -4636,16 +4636,17 @@
         sleeve(23, o1, o2, -14) + sleeve(97, o1, o2, 14);
     }
     if (id === "coat") {
-      var t1 = "#C9A98C", t2 = "#A8876A", t3 = "#E3CBB4";
+      var t1 = "#C9A98C", t2 = "#A8876A", t3 = "#EBDAC4";
       return sleeve(22, t1, t2, -14) + sleeve(98, t1, t2, 14) +
-        '<path d="M32 82 C32 76 46 74 60 74 C74 74 88 76 88 82 L92 123 C92 129 76 132 60 132 C44 132 28 129 28 123 Z" fill="' + t1 + '" stroke="' + t2 + '" stroke-width="1.8"/>' +
-        '<path d="M51 75 L60 90 L69 75 Z" fill="' + b.fill + '"/>' +
-        '<path d="M60 76 L50 93 L56 101 L60 90 Z" fill="' + t2 + '"/>' +
-        '<path d="M60 76 L70 93 L64 101 L60 90 Z" fill="' + t2 + '"/>' +
-        '<path d="M49 74 Q60 70 71 74 L70 78 Q60 75 50 78 Z" fill="' + t3 + '"/>' +
-        '<path d="M60 89 V132" stroke="' + t2 + '" stroke-width="1.6"/>' +
-        '<rect x="33" y="105" width="54" height="6" rx="3" fill="' + t2 + '"/>' +
-        '<rect x="54" y="103.4" width="12" height="9" rx="2" fill="#E8CDA8" stroke="' + t2 + '" stroke-width="1.2"/>';
+        '<path d="M32 82 C32 76 46 74 60 74 C74 74 88 76 88 82 L91 122 C91 128 76 131 60 131 C44 131 29 128 29 122 Z" fill="' + t1 + '" stroke="' + t2 + '" stroke-width="1.8"/>' +
+        '<path d="M54 87 H66 V131 H54 Z" fill="' + b.fill + '"/>' +
+        '<path d="M60 76 L51 92 L57 101 L60 90 Z" fill="' + t3 + '" stroke="' + t2 + '" stroke-width="1"/>' +
+        '<path d="M60 76 L69 92 L63 101 L60 90 Z" fill="' + t3 + '" stroke="' + t2 + '" stroke-width="1"/>' +
+        '<path d="M47 73 Q60 69 73 73 L72 77 Q60 74 48 77 Z" fill="' + t2 + '"/>' +
+        '<circle cx="63" cy="97" r="1.7" fill="#7A5B45"/><circle cx="63" cy="107" r="1.7" fill="#7A5B45"/>' +
+        '<rect x="31" y="104" width="58" height="5.6" rx="2.8" fill="' + t2 + '" opacity=".92"/>' +
+        '<rect x="55.5" y="102.6" width="9" height="8.4" rx="1.8" fill="#EBCD9F" stroke="' + t2 + '" stroke-width="1.1"/>' +
+        '<path d="M32 124 Q60 129 88 124" stroke="' + t2 + '" stroke-width="2" fill="none"/>';
     }
     if (id === "dress") {
       var d1 = "#E7B8E0", d2 = "#CF9CC9";

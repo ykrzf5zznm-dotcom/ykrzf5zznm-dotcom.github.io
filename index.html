@@ -4639,9 +4639,10 @@
       var t1 = "#C9A98C", t2 = "#A8876A", t3 = "#E3CBB4";
       return sleeve(22, t1, t2, -14) + sleeve(98, t1, t2, 14) +
         '<path d="M32 82 C32 76 46 74 60 74 C74 74 88 76 88 82 L92 123 C92 129 76 132 60 132 C44 132 28 129 28 123 Z" fill="' + t1 + '" stroke="' + t2 + '" stroke-width="1.8"/>' +
-        '<path d="M52 75 L60 88 L68 75 Z" fill="' + b.fill + '"/>' +
-        '<path d="M60 75 L51 91 L57 100 L60 89 Z" fill="' + t3 + '"/>' +
-        '<path d="M60 75 L69 91 L63 100 L60 89 Z" fill="' + t3 + '"/>' +
+        '<path d="M51 75 L60 90 L69 75 Z" fill="' + b.fill + '"/>' +
+        '<path d="M60 76 L50 93 L56 101 L60 90 Z" fill="' + t2 + '"/>' +
+        '<path d="M60 76 L70 93 L64 101 L60 90 Z" fill="' + t2 + '"/>' +
+        '<path d="M49 74 Q60 70 71 74 L70 78 Q60 75 50 78 Z" fill="' + t3 + '"/>' +
         '<path d="M60 89 V132" stroke="' + t2 + '" stroke-width="1.6"/>' +
         '<rect x="33" y="105" width="54" height="6" rx="3" fill="' + t2 + '"/>' +
         '<rect x="54" y="103.4" width="12" height="9" rx="2" fill="#E8CDA8" stroke="' + t2 + '" stroke-width="1.2"/>';
@@ -4666,10 +4667,11 @@
 
   /* ── 장신구 ────────────────────────────────────── */
   function wingsSVG() {
-    return '<path d="M30 76 C10 66 0 88 10 106 C15 96 21 90 30 88 Z" fill="#F6F0FF" stroke="#C9B6E6" stroke-width="1.6"/>' +
-      '<path d="M90 76 C110 66 120 88 110 106 C105 96 99 90 90 88 Z" fill="#F6F0FF" stroke="#C9B6E6" stroke-width="1.6"/>' +
-      '<path d="M22 84 Q16 94 18 101 M98 84 Q104 94 102 101" stroke="#CDBBE8" stroke-width="1.3" fill="none"/>' +
-      '<path d="M26 92 Q21 101 23 106 M94 92 Q99 101 97 106" stroke="#DCCFF0" stroke-width="1.2" fill="none"/>';
+    return '<path d="M33 66 C16 50 0 58 3 80 C5 95 17 101 31 94 Z" fill="#F7F2FF" stroke="#C9B6E6" stroke-width="1.6"/>' +
+      '<path d="M87 66 C104 50 120 58 117 80 C115 95 103 101 89 94 Z" fill="#F7F2FF" stroke="#C9B6E6" stroke-width="1.6"/>' +
+      '<path d="M24 68 Q10 74 8 84 M96 68 Q110 74 112 84" stroke="#CDBBE8" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
+      '<path d="M26 79 Q14 85 13 92 M94 79 Q106 85 107 92" stroke="#DCCFF0" stroke-width="1.2" fill="none" stroke-linecap="round"/>' +
+      '<path d="M28 90 Q20 94 19 99 M92 90 Q100 94 101 99" stroke="#DCCFF0" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
   }
 
   function accSVG(id, b) {

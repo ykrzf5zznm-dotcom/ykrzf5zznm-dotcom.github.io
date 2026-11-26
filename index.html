@@ -4625,10 +4625,10 @@
 
   /* ── 몽실이 몸 (2등신 인형 체형) ─────────────────── */
   function torsoSVG(b) {
-    var leg = '<rect x="46" y="106" width="12" height="35" rx="6" fill="' + b.fill +
+    var leg = '<rect x="45.8" y="106" width="13" height="35" rx="6.5" fill="' + b.shade +
       '" stroke="' + b.line + '" stroke-width="1.9"/>';
     var arm = '<g transform="rotate(9 36 100)">' +
-      '<rect x="30.2" y="87" width="11.6" height="26" rx="5.8" fill="' + b.fill +
+      '<rect x="30.2" y="87" width="11.6" height="26" rx="5.8" fill="' + b.shade +
       '" stroke="' + b.line + '" stroke-width="1.9"/></g>';
     return '<ellipse cx="60" cy="146.4" rx="27" ry="4" fill="rgba(120,90,140,.13)"/>' +
       leg + '<g transform="translate(120,0) scale(-1,1)">' + leg + '</g>' +

@@ -4875,13 +4875,16 @@
         '<path d="M37.2 108.6 Q60 114.4 82.8 108.6" stroke="' + o2 + '" stroke-width="2.2" fill="none" opacity=".8"/>';
     }
     if (id === "coat") {
-      var t1 = "#C9A98C", t2 = "#A8876A", t3 = "#EBDAC4";
+      var t1 = "#C08C60", t2 = "#95674B", t3 = "#F2E2C8";
       return sleevePair(t1, t2, t3) +
         trunkSVG(t1, t2, 'M60 77.6 C47.4 77.6 38.2 80.6 36.2 87 C34.3 94.2 33.9 103.6 35.1 112.4 ' +
           'C36.3 117 44 119.8 45.7 121.2 Q60 124.4 74.3 121.2 C76 119.8 83.7 117 84.9 111 ' +
           'C86.1 103 85.7 94.2 83.8 87 C81.8 80.6 72.6 77.6 60 77.6 Z') +
-        '<path d="M60 79.2 L50.6 92.4 L57.2 99.4 L60 89 Z" fill="' + t3 + '" stroke="' + t2 + '" stroke-width="1"/>' +
-        '<path d="M60 79.2 L69.4 92.4 L62.8 99.4 L60 89 Z" fill="' + t3 + '" stroke="' + t2 + '" stroke-width="1"/>' +
+        '<path d="M60 78.8 L48.6 93.6 L57.4 103.4 L60 90 Z" fill="' + t3 + '" stroke="' + t2 + '" stroke-width="1.1"/>' +
+        '<path d="M60 78.8 L71.4 93.6 L62.6 103.4 L60 90 Z" fill="' + t3 + '" stroke="' + t2 + '" stroke-width="1.1"/>' +
+        '<path d="M60 92 V119" stroke="' + t2 + '" stroke-width="1.3" opacity=".55"/>' +
+        '<rect x="39.6" y="106.6" width="9.4" height="4.6" rx="1.6" fill="none" stroke="' + t2 + '" stroke-width="1.2" opacity=".7"/>' +
+        '<rect x="71" y="106.6" width="9.4" height="4.6" rx="1.6" fill="none" stroke="' + t2 + '" stroke-width="1.2" opacity=".7"/>' +
         '<path d="M46.4 76.4 Q60 71.4 73.6 76.4 L72.2 80.6 Q60 77.2 47.8 80.6 Z" fill="' + t2 + '"/>' +
         '<circle cx="62" cy="93.6" r="1.7" fill="#6B4F3C"/>' +
         '<circle cx="62" cy="101" r="1.7" fill="#6B4F3C"/>' +
@@ -4910,7 +4913,8 @@
         '<path d="M43.4 82.4 Q60 92.6 76.6 82.4" stroke="' + c2 + '" stroke-width="2" fill="none"/>' +
         '<path d="M45.4 79.4 C51 74.6 69 74.6 74.6 79.4 L73.6 84 Q60 80.4 46.4 84 Z" fill="' + c2 + '" opacity=".9"/>' +
         '<circle cx="60" cy="84.6" r="3.6" fill="#FFD25E" stroke="#DDB23F" stroke-width="1.2"/>' +
-        '<path d="M32 110.6 Q60 118 88 110.6" stroke="#FFFFFF" stroke-width="1.8" opacity=".4" fill="none"/>';
+        '<path d="M32 110.6 Q60 118 88 110.6" stroke="#FFFFFF" stroke-width="1.8" opacity=".4" fill="none"/>' +
+        '<path d="M40.6 92 Q38.4 104 36.4 112.6 M79.4 92 Q81.6 104 83.6 112.6" stroke="' + c2 + '" stroke-width="1.3" opacity=".55" fill="none"/>';
     }
     if (id === "knit") {
       var n1 = "#FFE9A8", n2 = "#F5D77E", n3 = "#E3C062";
@@ -5033,10 +5037,11 @@
         '<circle cx="0" cy="0" r="2.3" fill="#FFE08A" stroke="#E8BE5E" stroke-width="1"/></g>';
     }
     if (id === "glasses") {
-      return '<g fill="rgba(255,255,255,.16)" stroke="#5B4A66" stroke-width="1.8">' +
-        '<circle cx="44" cy="47" r="8.8"/><circle cx="76" cy="47" r="8.8"/></g>' +
-        '<path d="M52.8 47 H67.2" stroke="#5B4A66" stroke-width="1.8"/>' +
-        '<path d="M35.2 45 L29.4 43.6 M84.8 45 L90.6 43.6" stroke="#5B4A66" stroke-width="1.6" stroke-linecap="round"/>';
+      return '<g fill="rgba(255,255,255,.18)" stroke="#5B4A66" stroke-width="2">' +
+        '<rect x="34.6" y="39.4" width="18.4" height="14.6" rx="5"/><rect x="67" y="39.4" width="18.4" height="14.6" rx="5"/></g>' +
+        '<path d="M53 46.4 H67" stroke="#5B4A66" stroke-width="2"/>' +
+        '<path d="M34.6 44 L28.6 42.4 M85.4 44 L91.4 42.4" stroke="#5B4A66" stroke-width="1.8" stroke-linecap="round"/>' +
+        '<path d="M37.6 42.4 L42 42" stroke="#FFFFFF" stroke-width="1.6" opacity=".6" stroke-linecap="round"/>';
     }
     if (id === "roundglasses") {
       return '<g fill="rgba(255,255,255,.22)" stroke="#8A6F8E" stroke-width="1.4">' +
@@ -5053,13 +5058,13 @@
         '<path d="M38.6 44.2 H43.6 M70.2 44.2 H75.2" stroke="#FFFFFF" stroke-width="1.6" opacity=".5"/>';
     }
     if (id === "heartsun") {
-      return '<path d="M44 54 C37.6 49.8 35.8 45.2 38.8 42.8 C41 41 43.2 42.4 44 43.8 ' +
-        'C44.8 42.4 47 41 49.2 42.8 C52.2 45.2 50.4 49.8 44 54 Z" fill="#3E3A4C"/>' +
-        '<path d="M76 54 C69.6 49.8 67.8 45.2 70.8 42.8 C73 41 75.2 42.4 76 43.8 ' +
-        'C76.8 42.4 79 41 81.2 42.8 C84.2 45.2 82.4 49.8 76 54 Z" fill="#3E3A4C"/>' +
-        '<path d="M50 45.6 Q60 41.6 70 45.6" stroke="#3E3A4C" stroke-width="2.2" fill="none"/>' +
-        '<path d="M37.4 44.6 L30.6 42.6 M82.6 44.6 L89.4 42.6" stroke="#3E3A4C" stroke-width="2" stroke-linecap="round"/>' +
-        '<path d="M39.6 44.6 Q41 43.6 42.6 44" stroke="#FFFFFF" stroke-width="1.4" opacity=".55" fill="none"/>';
+      return '<path d="M44 52.6 C38.6 49.2 37.4 45.4 39.8 43.4 C41.4 42.1 43.2 43 44 44.2 ' +
+        'C44.8 43 46.6 42.1 48.2 43.4 C50.6 45.4 49.4 49.2 44 52.6 Z" fill="#3E3A4C"/>' +
+        '<path d="M76 52.6 C70.6 49.2 69.4 45.4 71.8 43.4 C73.4 42.1 75.2 43 76 44.2 ' +
+        'C76.8 43 78.6 42.1 80.2 43.4 C82.6 45.4 81.4 49.2 76 52.6 Z" fill="#3E3A4C"/>' +
+        '<path d="M50 44.6 Q60 40.6 70 44.6" stroke="#3E3A4C" stroke-width="2.2" fill="none"/>' +
+        '<path d="M38.6 45.6 L31.6 43.6 M81.4 45.6 L88.4 43.6" stroke="#3E3A4C" stroke-width="2" stroke-linecap="round"/>' +
+        '<path d="M40.2 45.4 Q41.4 44.4 42.8 44.8" stroke="#FFFFFF" stroke-width="1.4" opacity=".5" fill="none"/>';
     }
     if (id === "headphone") {
       return '<path d="M25 54 Q60 -40 95 54" fill="none" stroke="#7C6A8C" stroke-width="4.4" stroke-linecap="round"/>' +
@@ -5069,12 +5074,13 @@
         '<rect x="91" y="48.6" width="6.4" height="11.4" rx="3.2" fill="#A794B8"/>';
     }
     if (id === "scarf") {
-      return '<path d="M61.6 88 L65.4 104.6 Q61.6 106.6 57.6 104.8 L59.4 88 Z" fill="#B9CDE8" stroke="#8FA9CE" stroke-width="1.4"/>' +
-        '<path d="M58.4 102.6 V106.2 M61.4 103 V106.4 M64.4 102.4 V105.8" stroke="#8FA9CE" stroke-width="1.3" stroke-linecap="round"/>' +
+      return '<path d="M62.6 88.4 L66.6 103.4 Q62.4 105.6 58.2 103.6 L60.2 88.4 Z" fill="#B9CDE8" stroke="#8FA9CE" stroke-width="1.4"/>' +
+        '<path d="M59.4 101.4 V105.4 M62.4 101.8 V105.6 M65.4 101 V105" stroke="#8FA9CE" stroke-width="1.3" stroke-linecap="round"/>' +
         '<path d="M46.6 82.6 C46.6 76.8 52.6 73.4 60 73.4 C67.4 73.4 73.4 76.8 73.4 82.6 ' +
         'C73.4 88.4 67.4 91.8 60 91.8 C52.6 91.8 46.6 88.4 46.6 82.6 Z" fill="#A9C1E0" stroke="#8FA9CE" stroke-width="1.6"/>' +
         '<path d="M47.8 78.6 Q60 82.6 72.2 78.6" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity=".85"/>' +
-        '<path d="M48.2 86.4 Q60 90.4 71.8 86.4" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity=".85"/>';
+        '<path d="M48.2 86.4 Q60 90.4 71.8 86.4" stroke="#FFFFFF" stroke-width="1.5" fill="none" opacity=".85"/>' +
+        '<ellipse cx="63.6" cy="88.6" rx="3.4" ry="3" fill="#B9CDE8" stroke="#8FA9CE" stroke-width="1.3"/>';
     }
     if (id === "cheeks") {
       return '<path d="M31 53.4 l1.5 3.2 3.5 .4 -2.6 2.4 .6 3.6 -3 -1.8 -3 1.8 ' +

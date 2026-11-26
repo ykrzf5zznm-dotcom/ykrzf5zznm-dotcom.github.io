@@ -771,7 +771,7 @@
         if (res.ok) return data;
 
         /* 키 인증 방식이 다른 환경이면 Authorization을 붙여 한 번만 재시도 */
-        if (res.status === 401 && !opts.auth) {
+        if (res.status === 401 && !opts.auth && !(data && data.code === "42501")) {
           var retry = {};
           for (var k in opts) retry[k] = opts[k];
           retry.auth = true;
@@ -938,6 +938,9 @@
         title: "숲의 자리를 아직 준비 중이에요",
         sub: "서버 테이블이 만들어지면 자동으로 연결돼요."
       };
+    }
+    if (err && (err.code === "42501" || err.status === 403)) {
+      return { title: "숲의 문이 아직 열리지 않았어요", sub: "잠시 후 다시 연결해 볼게요." };
     }
     if (err && err.status === 401) {
       return { title: "숲의 열쇠가 잠시 맞지 않아요", sub: "잠시 후 다시 연결해 볼게요." };

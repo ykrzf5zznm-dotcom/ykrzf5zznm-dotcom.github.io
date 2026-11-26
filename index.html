@@ -217,7 +217,17 @@
     70% { box-shadow: 0 0 0 7px rgba(143,217,194,0) }
     100% { box-shadow: 0 0 0 0 rgba(143,217,194,0) }
   }
-  .feed-live { font-size: 10.5px; color: #A193AB; }
+  .feed-live { font-size: 10.5px; color: #A193AB; padding: 0 20px 8px; }
+  .presence {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 9.5px; font-weight: 700; color: #6D8F84; letter-spacing: -0.2px;
+    background: rgba(226,245,239,.9); border: 1px solid rgba(190,230,219,.9);
+    padding: 4px 8px; border-radius: 999px; white-space: nowrap;
+  }
+  .presence .pr-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #56C39C;
+    box-shadow: 0 0 0 0 rgba(86,195,156,.6); animation: pulse 2.4s infinite;
+  }
 
   .card {
     margin: 0 14px 12px; padding: 14px 14px 12px;
@@ -726,6 +736,222 @@
     color: #B5A6BE; letter-spacing: -0.1px; word-break: keep-all;
   }
 
+  /* ── 검색 ─────────────────────────────────────────── */
+  .searchbar {
+    display: flex; align-items: center; gap: 7px;
+    margin: 10px 15px 0; padding: 9px 11px;
+    background: rgba(255,255,255,.84); border: 1px solid #F2E3ED; border-radius: 14px;
+    box-shadow: 0 6px 16px -12px rgba(170,135,190,.7);
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .searchbar:focus-within { border-color: #F7C4D8; box-shadow: 0 0 0 3px rgba(255,197,219,.28); }
+  .searchbar .sb-ico { font-size: 12px; opacity: .75; flex: 0 0 auto; }
+  .searchbar input {
+    flex: 1; min-width: 0; border: 0; outline: 0; background: none;
+    font-family: inherit; font-size: 12px; color: #4F4459; letter-spacing: -0.2px;
+    -webkit-appearance: none; appearance: none;
+  }
+  .searchbar input::-webkit-search-cancel-button,
+  .searchbar input::-webkit-search-decoration { -webkit-appearance: none; display: none; }
+  .searchbar input::placeholder { color: #C0B2C7; }
+  .search-clear {
+    flex: 0 0 auto; width: 20px; height: 20px; padding: 0;
+    display: grid; place-items: center; font-family: inherit; font-size: 10px;
+    color: #A08FB0; background: #FBF3F9; border: 1px solid #F2E3ED; border-radius: 50%;
+    cursor: pointer;
+  }
+  .search-clear[hidden] { display: none; }
+
+  /* ── 위로 뽑기 ─────────────────────────────────── */
+  .daily { align-items: center; }
+  .wish-btn {
+    flex: 0 0 auto; margin-left: auto; font-family: inherit;
+    font-size: 9.8px; font-weight: 800; color: #B0638A; letter-spacing: -0.2px;
+    background: #FFF1F8; border: 1px solid #F8DDEA; border-radius: 999px;
+    padding: 7px 9px; cursor: pointer; white-space: nowrap;
+  }
+  .wish-btn:active { transform: scale(.95); }
+  .wish-wrap {
+    position: absolute; inset: 0; z-index: 21;
+    display: flex; align-items: center; justify-content: center; padding: 20px 18px;
+    background: rgba(74,58,87,.34);
+    -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px);
+    opacity: 0; pointer-events: none; visibility: hidden;
+    transition: opacity .28s ease, visibility .28s ease;
+  }
+  .wish-wrap.on { opacity: 1; pointer-events: auto; visibility: visible; }
+  .wish-card {
+    position: relative; width: 100%; max-width: 316px; padding: 26px 20px 18px;
+    text-align: center;
+    background: linear-gradient(166deg, #FFFBFD 0%, #FFF1F8 48%, #EFE9FF 100%);
+    border-radius: 30px; border: 1px solid rgba(255,255,255,.96);
+    box-shadow: 0 30px 60px -18px rgba(120,80,140,.5), inset 0 1px 0 #fff;
+    transform: translateY(14px) scale(.96);
+    transition: transform .34s cubic-bezier(.2,.8,.3,1);
+  }
+  .wish-wrap.on .wish-card { transform: none; }
+  .wish-card .sheet-x { top: 10px; right: 11px; }
+  .wish-badge {
+    width: 58px; height: 58px; margin: 0 auto 12px; border-radius: 20px;
+    display: grid; place-items: center; font-size: 29px;
+    background: linear-gradient(140deg, #FFE0EC 0%, #EADFFF 60%, #DDF1F0 100%);
+    box-shadow: 0 12px 24px -10px rgba(190,150,200,.6), inset 0 0 0 1px rgba(255,255,255,.9);
+  }
+  .wish-label {
+    display: block; font-size: 11px; font-weight: 800; color: #C1749C;
+    letter-spacing: -0.2px; margin-bottom: 9px;
+  }
+  .wish-msg {
+    margin: 0 0 16px; min-height: 68px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14.5px; font-weight: 700; line-height: 1.75; color: #5A4868;
+    letter-spacing: -0.4px; word-break: keep-all;
+    animation: rise .4s ease both;
+  }
+  .wish-msg.pop { animation: pop .4s ease; }
+
+  /* ── 북마크 ───────────────────────────────────────── */
+  .book-btn {
+    flex: 0 0 auto; width: 24px; height: 24px; padding: 0; margin-left: 2px;
+    display: grid; place-items: center;
+    font-family: inherit; font-size: 11px; line-height: 1;
+    background: #FFFBFD; border: 1px solid #F3E7F0; border-radius: 50%;
+    color: #C3B2CB; cursor: pointer; transition: transform .14s, background .2s, border-color .2s;
+  }
+  .book-btn:active { transform: scale(.9); }
+  .book-btn[aria-pressed="true"] {
+    background: #FFF0F7; border-color: #F8D5E6;
+    box-shadow: 0 4px 10px -5px rgba(230,150,200,.9);
+  }
+  .book-item {
+    display: flex; align-items: flex-start; gap: 9px;
+    margin: 0 14px 8px; padding: 11px 12px;
+    background: rgba(255,255,255,.8); border: 1px solid rgba(255,255,255,.95);
+    border-radius: 16px; box-shadow: 0 8px 20px -14px rgba(160,128,178,.5);
+  }
+  .book-item .bi-ico { font-size: 14px; line-height: 1.3; flex: 0 0 auto; }
+  .book-item .bi-body { min-width: 0; flex: 1; }
+  .book-item .bi-body b { display: block; font-size: 10.5px; font-weight: 800; color: #8E76A0; margin-bottom: 2px; }
+  .book-item .bi-body p { margin: 0; font-size: 11.5px; line-height: 1.55; color: #5A4C66; word-break: keep-all; overflow-wrap: anywhere; }
+  .book-item .bi-act { display: flex; flex-direction: column; gap: 4px; flex: 0 0 auto; }
+  .book-mini {
+    font-family: inherit; font-size: 9.5px; font-weight: 700; color: #B0638A;
+    background: #FFF1F8; border: 1px solid #F8DDE9; border-radius: 9px; padding: 5px 7px;
+    cursor: pointer; white-space: nowrap;
+  }
+  .book-mini.ghost { color: #A08FB0; background: #FAF6FC; border-color: #EFE6F3; }
+
+  /* ── 별빛 · 밤모드 ─────────────────────────────── */
+  .stars {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    opacity: 0; transition: opacity .5s ease;
+    background-image:
+      radial-gradient(1.6px 1.6px at 12% 9%, rgba(255,255,255,.95), transparent 60%),
+      radial-gradient(1.3px 1.3px at 32% 4%, rgba(255,255,255,.8), transparent 60%),
+      radial-gradient(1.8px 1.8px at 68% 12%, rgba(255,255,255,.9), transparent 60%),
+      radial-gradient(1.2px 1.2px at 86% 7%, rgba(255,255,255,.75), transparent 60%),
+      radial-gradient(1.5px 1.5px at 46% 18%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(1.2px 1.2px at 8% 26%, rgba(255,255,255,.6), transparent 60%),
+      radial-gradient(1.7px 1.7px at 76% 24%, rgba(255,255,255,.75), transparent 60%),
+      radial-gradient(1.2px 1.2px at 92% 33%, rgba(255,255,255,.55), transparent 60%),
+      radial-gradient(1.4px 1.4px at 24% 38%, rgba(255,255,255,.5), transparent 60%),
+      radial-gradient(1.3px 1.3px at 58% 6%, rgba(255,255,255,.7), transparent 60%),
+      radial-gradient(1.5px 1.5px at 38% 30%, rgba(255,255,255,.45), transparent 60%);
+  }
+  .phone.night .stars { opacity: .75; animation: twinkle 6s ease-in-out infinite alternate; }
+  @keyframes twinkle { from { opacity: .45 } to { opacity: .85 } }
+
+  .phone.night {
+    background: linear-gradient(168deg, #171528 0%, #1C1930 42%, #241D38 100%);
+    box-shadow: 0 30px 70px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.06);
+  }
+  body.night { background: #0D0C16; }
+  .phone.night .sky::before { background: #3B2F63; opacity: .45; }
+  .phone.night .sky::after { background: #2A3A5C; opacity: .45; }
+  .phone.night .cloud { opacity: .2; }
+  .phone.night .hero, .phone.night .subhero {
+    background:
+      radial-gradient(115% 85% at 12% 0%, rgba(122,96,200,.26) 0%, rgba(122,96,200,0) 58%),
+      linear-gradient(158deg, #231D3C 0%, #1D1932 58%, #202742 100%);
+  }
+  .phone.night .brand-name { color: #F3EDFB; text-shadow: none; }
+  .phone.night .tagline { color: #B9AECC; }
+  .phone.night .brand-emoji { background: linear-gradient(140deg, #3A2C55 0%, #2B2A4A 100%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+  .phone.night .mini { color: #BFB2D4; background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.1); box-shadow: none; }
+  .phone.night .mini-act.on { color: #9FE3CF; background: rgba(90,200,170,.18); border-color: rgba(120,220,190,.32); }
+  .phone.night .me-chip { color: #D8C9EA; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.11); box-shadow: none; }
+  .phone.night .me-chip .mc-edit { color: #F0A6C8; border-left-color: rgba(255,255,255,.16); }
+  .phone.night .me-chip-mini { color: #E2AFCB; background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.11); }
+  .phone.night .compose, .phone.night .card, .phone.night .stat-card,
+  .phone.night .echo, .phone.night .hist, .phone.night .big-empty,
+  .phone.night .small-empty, .phone.night .net-banner,
+  .phone.night .hidden-note, .phone.night .sort-toggle, .phone.night .searchbar {
+    background: rgba(38,33,60,.78);
+    border-color: rgba(255,255,255,.09);
+    box-shadow: 0 12px 30px -16px rgba(0,0,0,.8);
+  }
+  .phone.night .stat-card {
+    background: linear-gradient(150deg, rgba(45,38,70,.9) 0%, rgba(38,33,60,.9) 55%, rgba(45,40,74,.9) 100%);
+  }
+  .phone.night .stat-card::after { background: radial-gradient(circle, rgba(255,150,196,.28), rgba(255,150,196,0) 70%); }
+  .phone.night .input-wrap { background: #221E34; border-color: #332C4A; }
+  .phone.night textarea, .phone.night .nick-input, .phone.night .say-row input,
+  .phone.night .searchbar input { color: #EDE6F7; }
+  .phone.night textarea::placeholder, .phone.night .say-row input::placeholder,
+  .phone.night .searchbar input::placeholder, .phone.night .nick-input::placeholder { color: #7E748F; }
+  .phone.night .compose-label, .phone.night .feed-title, .phone.night .sec-head { color: #DCD2EC; }
+  .phone.night .compose-sub, .phone.night .compose-note, .phone.night .footnote,
+  .phone.night .feed-live, .phone.night .sort-count, .phone.night .daily-body p,
+  .phone.night .who small, .phone.night .stat-note, .phone.night .echo-quote,
+  .phone.night .hist-body p, .phone.night .big-empty p, .phone.night .small-empty,
+  .phone.night .book-item .bi-body p, .phone.night .hidden-note p,
+  .phone.night .sheet-sub, .phone.night .sheet-note, .phone.night .nick-meta,
+  .phone.night .pick-label { color: #9E93B2; }
+  .phone.night .card-text, .phone.night .who b, .phone.night .hist-body b,
+  .phone.night .bubble p, .phone.night .book-item .bi-body b { color: #E6DEF3; }
+  .phone.night .tag { background: #2A2440; border-color: #3A3352; color: #C0B2D6; }
+  .phone.night .fchip { background: #241F38; border-color: #3A3352; color: #B7A9CC; }
+  .phone.night .filterbar { background: rgba(24,20,38,.92); border-bottom-color: rgba(255,255,255,.08); }
+  .phone.night .sort-btn { color: #A79ABB; }
+  .phone.night .sort-toggle { border-color: rgba(255,255,255,.09); }
+  .phone.night .react { background: #2A2440; border-color: #3A3352; color: #BFAFD3; }
+  .phone.night .thread { border-top-color: #3A3352; }
+  .phone.night .bubble { background: #2A2440; }
+  .phone.night .bubble.mine { background: #33264C; }
+  .phone.night .bubble b { color: #A99CBF; }
+  .phone.night .tabbar { background: rgba(20,17,32,.94); border-top-color: rgba(255,255,255,.08); }
+  .phone.night .tab { color: #7E7490; }
+  .phone.night .tab.on { color: #F2A3C4; }
+  .phone.night .tab-dot { box-shadow: 0 0 0 2px #141120, 0 2px 6px rgba(226,146,196,.7); }
+  .phone.night .toast { background: rgba(243,238,255,.95); color: #2A2440; }
+  .phone.night .daily { background: linear-gradient(120deg, rgba(52,43,82,.92) 0%, rgba(40,34,64,.92) 55%, rgba(38,40,72,.92) 100%); }
+  .phone.night .daily-body b { color: #F0A7C6; }
+  .phone.night .mine-badge { background: #3A2C4E; color: #EEB3D0; }
+  .phone.night .card-tag { background: #3A2C4E; border-color: #4A3A60; color: #EFAFCE; }
+  .phone.night .sec-head .sec-n { background: #3A2C4E; border-color: #4A3A60; color: #E9AECB; }
+  .phone.night .stat-cell { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.09); }
+  .phone.night .stat-cell b { color: #EDE4F8; }
+  .phone.night .stat-big { color: #F2A3C4; }
+  .phone.night .stat-label { color: #A99CBF; }
+  .phone.night .more-btn, .phone.night .book-btn { background: #2A2440; border-color: #3A3352; color: #A79ABB; }
+  .phone.night .book-btn[aria-pressed="true"] { background: #3A2C4E; border-color: #4A3A60; }
+  .phone.night .more-menu { background: #262039; border-color: #3A3352; }
+  .phone.night .more-menu button { color: #CFC2E2; }
+  .phone.night .more-menu button:active { background: #332B4E; }
+  .phone.night .book-item { background: rgba(38,33,60,.78); border-color: rgba(255,255,255,.09); }
+  .phone.night .book-mini { color: #E9AECB; background: #3A2C4E; border-color: #4A3A60; }
+  .phone.night .book-mini.ghost { color: #A79ABB; background: #2A2440; border-color: #3A3352; }
+  .phone.night .sheet { background: linear-gradient(166deg, #241F3A 0%, #221D36 46%, #2A2344 100%); border-color: rgba(255,255,255,.1); }
+  .phone.night .sheet-title, .phone.night .wish-msg { color: #F1EAFB; }
+  .phone.night .wish-card { background: linear-gradient(166deg, #241F3A 0%, #241D38 46%, #2C2448 100%); border-color: rgba(255,255,255,.1); }
+  .phone.night .nick-preview { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.09); }
+  .phone.night .nick-preview .np-name { color: #EDE4F8; }
+  .phone.night .echip { background: #241F38; border-color: #3A3352; }
+  .phone.night .sheet-x { background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.13); color: #C9BBDC; }
+  .phone.night .wish-btn { color: #F0A6C8; background: #3A2C4E; border-color: #4A3A60; }
+  .phone.night .nb-retry { color: #F0A6C8; background: #33284A; border-color: #473A60; }
+  .phone.night .presence { color: #9FE3CF; background: rgba(90,200,170,.16); border-color: rgba(120,220,190,.3); }
+
   /* ── 실제 휴대폰에서는 화면 가득 ─────────────────── */
   @media (max-width: 460px) {
     body { padding: 0; background: #FFF7F1; overflow: hidden; height: 100vh; height: 100dvh; }
@@ -748,6 +974,7 @@
     <span class="cloud c3">🫧</span>
     <span class="cloud c4">🌿</span>
   </div>
+  <div class="stars" aria-hidden="true"></div>
 
   <!-- ── 홈 ─────────────────────────────────────────── -->
   <section class="view active" id="view-home" aria-label="홈">
@@ -763,6 +990,8 @@
         <span class="mini">🍃 몽실몽실 쉼터</span>
         <button class="mini mini-act" id="rainBtn" type="button" aria-pressed="false"
                 aria-label="잔잔한 빗소리 켜기">🎧 빗소리</button>
+        <button class="mini mini-act" id="themeBtn" type="button" aria-pressed="false"
+                aria-label="밤 모드 켜기">🌙 밤모드</button>
       </div>
       <button class="me-chip" type="button" data-me="1" aria-label="내 닉네임 바꾸기">
         <span class="mc-emoji js-me-emoji" aria-hidden="true">🫧</span>
@@ -803,6 +1032,14 @@
         <b>오늘의 따뜻한 한마디</b>
         <p id="dailyText">오늘 버틴 것만으로도 충분히 잘했어요 🫧</p>
       </div>
+      <button class="wish-btn" id="wishBtn" type="button">💌 위로 뽑기</button>
+    </div>
+
+    <div class="searchbar">
+      <span class="sb-ico" aria-hidden="true">🔍</span>
+      <input id="searchInput" type="search" autocomplete="off" enterkeyhint="search"
+             placeholder="고민 검색..." aria-label="고민 검색">
+      <button class="search-clear" id="searchClear" type="button" aria-label="검색어 지우기" hidden>✕</button>
     </div>
 
     <div class="sortbar">
@@ -827,8 +1064,11 @@
     <section class="feed" aria-label="실시간 공감 피드">
       <div class="feed-head">
         <div class="feed-title"><span class="dot" aria-hidden="true"></span>실시간 공감 피드</div>
-        <div class="feed-live" id="feedLive">숲을 불러오는 중...</div>
+        <div class="presence" id="presenceChip" title="지금 이 숲에 함께 있는 사람">
+          <span class="pr-dot" aria-hidden="true"></span><span id="presenceText">지금 1명이 함께 있어요</span>
+        </div>
       </div>
+      <div class="feed-live" id="feedLive">숲을 불러오는 중...</div>
       <div class="net-banner" id="netBanner" hidden></div>
       <div class="hidden-note" id="hiddenNote" hidden></div>
       <div id="feedList"></div>
@@ -913,6 +1153,18 @@
       <p class="sheet-note" id="sheetNote">비워 두면 랜덤 닉네임으로 들어가요 · 언제든 바꿀 수 있어요</p>
     </div>
   </div>
+
+  <!-- ── 위로 뽑기 ─────────────────────────────── -->
+  <div class="wish-wrap" id="wishWrap" aria-hidden="true">
+    <div class="wish-card" role="dialog" aria-modal="true" aria-labelledby="wishLabel">
+      <button class="sheet-x" id="wishX" type="button" aria-label="닫기">✕</button>
+      <div class="wish-badge" id="wishEmoji" aria-hidden="true">💌</div>
+      <b class="wish-label" id="wishLabel">숲이 건네는 위로 한마디</b>
+      <p class="wish-msg" id="wishMsg">마음이 조금 쉬어가도록, 한 줄 뽑아보세요.</p>
+      <button class="sheet-cta" id="wishAgain" type="button">다른 한마디 더 뽑기</button>
+      <p class="sheet-note">마음이 무거울 때 몇 번이든 뽑아도 괜찮아요</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -952,6 +1204,7 @@
   var activeTab = "home";
   var activeFilter = "전체";
   var sortMode = "new";
+  var searchQuery = "";
   var drafts = {};
   var openThreads = {};
   var pendingDrop = null;
@@ -976,6 +1229,16 @@
   var sortCount = document.getElementById("sortCount");
   var hiddenNote = document.getElementById("hiddenNote");
   var rainBtn = document.getElementById("rainBtn");
+  var presenceText = document.getElementById("presenceText");
+  var themeBtn = document.getElementById("themeBtn");
+  var searchInput = document.getElementById("searchInput");
+  var searchClear = document.getElementById("searchClear");
+  var wishWrap = document.getElementById("wishWrap");
+  var wishBtn = document.getElementById("wishBtn");
+  var wishX = document.getElementById("wishX");
+  var wishAgain = document.getElementById("wishAgain");
+  var wishMsg = document.getElementById("wishMsg");
+  var wishEmoji = document.getElementById("wishEmoji");
 
   /* ── 내 기기 기억 (내가 쓴 글/한마디, 누른 공감) ──── */
   var mineIds = loadMine();
@@ -1026,6 +1289,27 @@
   }
 
   function isHidden(id) { return hiddenIds.indexOf(id) >= 0; }
+
+  /* ── 저장한 글 (북마크) ───────────────────────────── */
+  var BOOK_KEY = "mongsil.bookmarks.v1";
+  var bookIds = loadBooks();
+
+  function loadBooks() {
+    try {
+      var raw = localStorage.getItem(BOOK_KEY);
+      if (raw) {
+        var d = JSON.parse(raw);
+        if (Array.isArray(d)) return d.filter(function (x) { return typeof x === "string"; });
+      }
+    } catch (e) {}
+    return [];
+  }
+
+  function saveBooks() {
+    try { localStorage.setItem(BOOK_KEY, JSON.stringify(bookIds)); } catch (e) {}
+  }
+
+  function isBooked(id) { return bookIds.indexOf(id) >= 0; }
 
   function saveReport(id) {
     try {
@@ -1377,6 +1661,10 @@
         '<span class="avatar ' + p.tone + '" aria-hidden="true">' + p.emoji + "</span>" +
         '<div class="who"><b>' + esc(p.name) + "</b><small>" + esc(whenText(p)) + "</small></div>" +
         '<span class="card-tag">' + esc(p.tags[0] || "그냥") + "</span>" +
+        '<button class="book-btn" type="button" data-act="book" aria-pressed="' +
+          (isBooked(p.id) ? "true" : "false") + '" aria-label="' +
+          (isBooked(p.id) ? "저장 해제" : "이 글 저장") + '">' +
+          (isBooked(p.id) ? "📌" : "🔖") + "</button>" +
         '<button class="more-btn" type="button" data-act="more" aria-expanded="false"' +
           ' aria-label="이 글 숨기기·신고하기">···</button>' +
       "</div>" +
@@ -1401,6 +1689,16 @@
     var arr = state.posts.filter(function (p) { return !isHidden(p.id); });
     if (activeFilter !== "전체") {
       arr = arr.filter(function (p) { return p.tags.indexOf(activeFilter) >= 0; });
+    }
+    var q = searchQuery.trim().toLowerCase();
+    if (q) {
+      arr = arr.filter(function (p) {
+        if ((p.text || "").toLowerCase().indexOf(q) >= 0) return true;
+        if ((p.name || "").toLowerCase().indexOf(q) >= 0) return true;
+        return (p.tags || []).some(function (t) {
+          return String(t).toLowerCase().indexOf(q) >= 0;
+        });
+      });
     }
     if (sortMode === "hug") {
       return arr.slice().sort(function (a, b) {
@@ -1431,7 +1729,9 @@
   function setFeedLive(n) {
     if (!booted) { feedLive.textContent = "숲을 불러오는 중..."; return; }
     if (!online) { feedLive.textContent = "연결을 기다리는 중"; return; }
-    if (activeFilter === "전체") {
+    if (searchQuery.trim()) {
+      feedLive.textContent = "‘" + searchQuery.trim() + "’ 검색 결과 " + n + "개";
+    } else if (activeFilter === "전체") {
       feedLive.textContent = "지금 " + n + "개의 마음이 머물러 있어요";
     } else {
       feedLive.textContent = activeFilter + " 마음 " + n + "개";
@@ -1461,6 +1761,14 @@
     setFeedLive(arr.length);
     updateHiddenNote();
     if (!arr.length) {
+      if (searchQuery.trim()) {
+        feedList.innerHTML = '<div class="big-empty">' +
+          '<div class="empty-emoji">🔍</div>' +
+          "<b>‘" + esc(searchQuery.trim()) + "’ 마음은 찾지 못했어요</b>" +
+          "<p>다른 말로 찾아보거나, 지금 그 마음이 있다면 첫 번째로 적어봐도 괜찮아요.</p>" +
+          "</div>";
+        return;
+      }
       feedList.innerHTML = activeFilter === "전체"
         ? emptyHTML()
         : '<div class="big-empty">' +
@@ -1540,6 +1848,7 @@
 
   function renderHearts() {
     var s = receivedStats();
+    var saved = bookIds.map(postById).filter(function (p) { return !!p; });
     var html = "";
 
     if (!s.mine.length) {
@@ -1566,6 +1875,24 @@
               : "내가 심은 마음 " + s.mine.length + "개에 숲이 답해줬어요.") +
           "</p>" +
         "</div>";
+    }
+
+    html += '<div class="sec-head"><span class="sec-ico" aria-hidden="true">📌</span>저장한 글<span class="sec-n">' + saved.length + "</span></div>";
+    if (saved.length) {
+      saved.slice().reverse().forEach(function (p) {
+        html +=
+          '<div class="book-item">' +
+            '<span class="bi-ico" aria-hidden="true">📌</span>' +
+            '<div class="bi-body"><b>' + esc(p.name) + " · " + esc(p.tags[0] || "그냥") + "</b>" +
+              "<p>“" + esc(excerpt(p.text)) + "”</p></div>" +
+            '<div class="bi-act">' +
+              '<button class="book-mini" type="button" data-goto="home" data-focus="' + p.id + '">보러 가기</button>' +
+              '<button class="book-mini ghost" type="button" data-act="unbook" data-id="' + p.id + '">해제</button>' +
+            "</div>" +
+          "</div>";
+      });
+    } else {
+      html += '<div class="small-empty"><span aria-hidden="true">🔖</span>아직 저장한 글이 없어요.<br>마음에 드는 글의 🔖를 눌러두면 여기 모여요.</div>';
     }
 
     html += '<div class="sec-head"><span class="sec-ico" aria-hidden="true">💌</span>내 글에 달린 따뜻한 한마디<span class="sec-n">' + s.says + "</span></div>";
@@ -1830,6 +2157,7 @@
     else if (act === "more") toggleMore(card, btn);
     else if (act === "hide") hidePost(p.id);
     else if (act === "report") reportPost(p.id);
+    else if (act === "book") toggleBook(p.id);
   });
 
   feedList.addEventListener("input", function (e) {
@@ -2274,6 +2602,234 @@
   }
 
   rainBtn.addEventListener("click", toggleRain);
+
+  /* ── 밤 모드 / 낮 모드 ───────────────────────────── */
+  var THEME_KEY = "mongsil.theme.v1";
+  var nightMode = false;
+
+  function applyTheme(night) {
+    nightMode = !!night;
+    var phone = document.querySelector(".phone");
+    if (phone) phone.classList.toggle("night", nightMode);
+    document.body.classList.toggle("night", nightMode);
+    themeBtn.setAttribute("aria-pressed", nightMode ? "true" : "false");
+    themeBtn.textContent = nightMode ? "☀️ 낮모드" : "🌙 밤모드";
+    themeBtn.setAttribute("aria-label", nightMode ? "낮 모드로 바꾸기" : "밤 모드로 바꾸기");
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", nightMode ? "#171528" : "#FFF3F7");
+    try { localStorage.setItem(THEME_KEY, nightMode ? "night" : "day"); } catch (e) {}
+  }
+
+  (function initTheme() {
+    var v = "day";
+    try { v = localStorage.getItem(THEME_KEY) || "day"; } catch (e) {}
+    applyTheme(v === "night");
+  })();
+
+  themeBtn.addEventListener("click", function () {
+    applyTheme(!nightMode);
+    toast(nightMode ? "별빛이 내려앉은 밤 숲이에요 🌙" : "포근한 낮 숲으로 돌아왔어요 ☀️");
+  });
+
+  /* ── 고민 검색 ─────────────────────────────────── */
+  function applySearch() {
+    searchQuery = searchInput.value || "";
+    searchClear.hidden = !searchQuery.trim();
+    renderHome();
+  }
+
+  searchInput.addEventListener("input", applySearch);
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); searchInput.blur(); }
+  });
+  searchClear.addEventListener("click", function () {
+    searchInput.value = "";
+    applySearch();
+    try { searchInput.focus(); } catch (e) {}
+  });
+
+  /* ── 위로 뽑기 ─────────────────────────────────── */
+  var WISHES = [
+    { e: "🌷", t: "오늘 하루도 정말 애썼어요. 잘 자요." },
+    { e: "🫂", t: "당신이 혼자라고 느끼는 순간에도, 여기선 혼자가 아니에요." },
+    { e: "🌙", t: "지금의 무게가 당신의 전부는 아니에요." },
+    { e: "☁️", t: "잠깐 쉬어가는 건 멈춘 게 아니에요." },
+    { e: "🌿", t: "숨만 쉬어도 되는 날이 있어요. 오늘이 그런 날이면 좋겠어요." },
+    { e: "🤍", t: "당신의 마음은 이미 충분히 애쓰고 있어요." },
+    { e: "🌼", t: "작은 하루 하나가 모여서 당신이 되었어요. 그거면 충분해요." },
+    { e: "☀️", t: "울고 나면 조금 가벼워졌을 거예요. 그걸로도 잘한 거예요." },
+    { e: "🍃", t: "너무 잘하려고 하지 않아도 괜찮아요." },
+    { e: "💗", t: "당신이 버틴 오늘을 누군가는 꼭 알아줄 거예요." },
+    { e: "🌈", t: "지금은 흐린 하늘도 곧 갤 거예요." },
+    { e: "🕯️", t: "혼자인 밤이 길어도 아침은 꼭 와요." },
+    { e: "🐿️", t: "당신 속도로 가도 돼요. 숲은 기다려 줄게요." },
+    { e: "💌", t: "아무에게도 못 한 말을 꺼내줘서 고마워요." },
+    { e: "🌸", t: "당신이 오늘도 살아 있어서 숲이 조금 더 환해졌어요." },
+    { e: "🧸", t: "스스로를 한 번만 안아줘도 돼요." },
+    { e: "⭐", t: "지금 이 마음, 여기 두고 가도 괜찮아요." }
+  ];
+  var lastWish = -1;
+
+  function drawWish() {
+    var i = Math.floor(Math.random() * WISHES.length);
+    var guard = 0;
+    while (i === lastWish && guard++ < 8) i = Math.floor(Math.random() * WISHES.length);
+    lastWish = i;
+    wishEmoji.textContent = WISHES[i].e;
+    wishMsg.textContent = WISHES[i].t;
+    wishMsg.classList.remove("pop");
+    void wishMsg.offsetWidth;
+    wishMsg.classList.add("pop");
+  }
+
+  function openWish() {
+    drawWish();
+    wishWrap.classList.add("on");
+    wishWrap.setAttribute("aria-hidden", "false");
+  }
+
+  function closeWish() {
+    wishWrap.classList.remove("on");
+    wishWrap.setAttribute("aria-hidden", "true");
+  }
+
+  wishBtn.addEventListener("click", openWish);
+  wishX.addEventListener("click", closeWish);
+  wishAgain.addEventListener("click", drawWish);
+  wishWrap.addEventListener("click", function (e) {
+    if (e.target === wishWrap) closeWish();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && wishWrap.classList.contains("on")) closeWish();
+  });
+
+  /* ── 마음 보관함 (북마크) ───────────────────────── */
+  function toggleBook(id) {
+    var on = isBooked(id);
+    if (on) bookIds = bookIds.filter(function (x) { return x !== id; });
+    else bookIds.push(id);
+    saveBooks();
+
+    var card = findCard(id);
+    if (card) {
+      var b = card.querySelector(".book-btn");
+      if (b) {
+        b.setAttribute("aria-pressed", on ? "false" : "true");
+        b.setAttribute("aria-label", on ? "이 글 저장" : "저장 해제");
+        b.textContent = on ? "🔖" : "📌";
+      }
+    }
+    if (activeTab === "hearts") renderHearts();
+    toast(on ? "저장을 풀었어요" : "마음 보관함에 담았어요 📌");
+  }
+
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest('[data-act="unbook"]');
+    if (!b) return;
+    toggleBook(b.dataset.id);
+  });
+
+  /* ── 실시간 접속자 (Realtime Presence) ─────────────── */
+  var presenceKeys = {};
+  var presenceWs = null;
+  var presenceRef = 0;
+  var presenceHb = null;
+  var presenceRetry = null;
+  var presenceJoined = false;
+  var presenceMyKey = "sv" + Math.random().toString(36).slice(2, 10);
+
+  function setPresence(n) {
+    var c = Math.max(1, n);
+    if (presenceText) presenceText.textContent = "지금 " + c + "명이 함께 있어요";
+  }
+
+  function applyPresenceState(state) {
+    presenceKeys = {};
+    Object.keys(state || {}).forEach(function (k) { presenceKeys[k] = 1; });
+    setPresence(Object.keys(presenceKeys).length);
+  }
+
+  function connectPresence() {
+    if (presenceWs) return;
+    var url = SUPA_URL.replace("https://", "wss://") +
+      "/realtime/v1/websocket?apikey=" + encodeURIComponent(SUPA_KEY) + "&vsn=1.0.0";
+    var ws;
+    try { ws = new WebSocket(url); } catch (e) { setPresence(1); return; }
+    presenceWs = ws;
+
+    ws.onopen = function () {
+      presenceRef++;
+      ws.send(JSON.stringify({
+        topic: "realtime:mongsil-presence",
+        event: "phx_join",
+        payload: {
+          config: {
+            presence: { key: presenceMyKey },
+            broadcast: { self: false },
+            postgres_changes: []
+          },
+          access_token: SUPA_KEY
+        },
+        ref: String(presenceRef)
+      }));
+      clearInterval(presenceHb);
+      presenceHb = setInterval(function () {
+        if (ws.readyState === 1) {
+          presenceRef++;
+          ws.send(JSON.stringify({ topic: "phoenix", event: "heartbeat", payload: {}, ref: String(presenceRef) }));
+        }
+      }, 25000);
+    };
+
+    ws.onmessage = function (ev) {
+      var msg;
+      try { msg = JSON.parse(ev.data); } catch (e) { return; }
+      if (!msg) return;
+
+      if (msg.event === "phx_reply" && msg.topic === "realtime:mongsil-presence") {
+        var status = msg.payload && msg.payload.status;
+        if (status === "ok") {
+          presenceJoined = true;
+          var pres = (msg.payload.response && msg.payload.response.presences) || {};
+          applyPresenceState(pres);
+          presenceRef++;
+          ws.send(JSON.stringify({
+            topic: "realtime:mongsil-presence",
+            event: "presence",
+            payload: { event: "track", payload: { joined: Date.now() } },
+            ref: String(presenceRef)
+          }));
+        } else {
+          setPresence(1);
+        }
+        return;
+      }
+
+      if (msg.event === "presence_state") { applyPresenceState(msg.payload || {}); return; }
+
+      if (msg.event === "presence_diff") {
+        var p = msg.payload || {};
+        Object.keys(p.joins || {}).forEach(function (k) { presenceKeys[k] = 1; });
+        Object.keys(p.leaves || {}).forEach(function (k) { delete presenceKeys[k]; });
+        setPresence(Object.keys(presenceKeys).length);
+        return;
+      }
+    };
+
+    ws.onclose = function () {
+      clearInterval(presenceHb);
+      presenceHb = null;
+      presenceWs = null;
+      presenceJoined = false;
+      setPresence(1);
+      clearTimeout(presenceRetry);
+      presenceRetry = setTimeout(connectPresence, 8000);
+    };
+
+    ws.onerror = function () { setPresence(1); };
+  }
+
+  connectPresence();
 
   /* ── 첫 렌더 & 주기적 동기화 ─────────────────────── */
   renderHome();

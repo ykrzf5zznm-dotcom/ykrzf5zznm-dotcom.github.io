@@ -6,12 +6,14 @@
  body{margin:0;padding:8px;background:#FDF1F8;font-family:-apple-system,sans-serif;}
  h2{font-size:13px;margin:12px 0 4px;color:#5A4868;}
  .grid{display:flex;flex-wrap:wrap;gap:4px;}
- .tile{width:120px;}
  .tile svg{display:block;width:120px;height:150px;overflow:visible;background:radial-gradient(80%% 70%% at 50%% 18%%,#fff 0%%,#FDF1F8 60%%,#EEE8FF 100%%);border-radius:10px;}
- .tile span{display:block;text-align:center;font-size:9px;color:#8E7C9A;margin-top:1px;}
+ .tile span{display:block;width:120px;text-align:center;font-size:9px;color:#8E7C9A;margin-top:1px;}
 </style></head><body>
 <div id="out"></div>
 <script>
+  var AVATAR_KEY = "mongsil.avatar.v1";
+  var INK = "#4B3B52";
+
   var BODIES = [
     { id: "cream", name: "크림", fill: "#FFF4E6", shade: "#FFE6CB", line: "#E0C4A4" },
     { id: "peach", name: "복숭아", fill: "#FFDCCB", shade: "#FFC7B1", line: "#E5A488" },
@@ -554,7 +556,7 @@
 </script>
 <script>
 var out=document.getElementById('out');
-function sect(title, list, patch, cat){
+function sect(title, list, patch){
   var h='<h2>'+title+'</h2><div class="grid">';
   list.forEach(function(o){
     var a={body:'cream',face:'smile',outfit:'hoodie',shoes:'sneaker',acc:'none',drawingData:''};
@@ -563,21 +565,20 @@ function sect(title, list, patch, cat){
   });
   out.innerHTML+=h+'</div>';
 }
-function nonePatch(a,o){}
 sect('옷 (12)', OUTFITS.filter(function(o){return o.id!=='none';}), function(a,o){a.outfit=o.id;});
 sect('신발 (10)', SHOES, function(a,o){a.shoes=o.id;});
 sect('장신구 (17)', ACCS.filter(function(o){return o.id!=='none';}), function(a,o){a.acc=o.id;});
 sect('표정 (8)', FACES, function(a,o){a.face=o.id;});
 sect('바디 (8)', BODIES, function(a,o){a.body=o.id;});
-sect('조합 (스타일)', [
-  {body:'choco',face:'shy',outfit:'coat',shoes:'boots',acc:'scarf'},
-  {body:'lav',face:'sparkle',outfit:'dress',shoes:'flats',acc:'crown'},
-  {body:'peach',face:'wink',outfit:'jacket',shoes:'hightop',acc:'headphone'},
-  {body:'matcha',face:'sleepy',outfit:'bearjam',shoes:'bunny',acc:'bear'},
-  {body:'sky',face:'smile',outfit:'apron',shoes:'socks',acc:'flower'},
-  {body:'lemon',face:'pat',outfit:'knit',shoes:'sneaker',acc:'cheeks'},
-  {body:'cream',face:'cool',outfit:'overall',shoes:'oxford',acc:'sunglass'},
-  {body:'navy',face:'teary',outfit:'sailor',shoes:'rain',acc:'wings'}], function(a,o){
+sect('조합', [
+  {name:'코트',body:'choco',face:'shy',outfit:'coat',shoes:'boots',acc:'scarf'},
+  {name:'원피스',body:'lav',face:'sparkle',outfit:'dress',shoes:'flats',acc:'crown'},
+  {name:'점퍼',body:'peach',face:'wink',outfit:'jacket',shoes:'hightop',acc:'headphone'},
+  {name:'곰잠옷',body:'matcha',face:'sleepy',outfit:'bearjam',shoes:'bunny',acc:'bear'},
+  {name:'앞치마',body:'sky',face:'smile',outfit:'apron',shoes:'socks',acc:'flower'},
+  {name:'니트',body:'lemon',face:'pat',outfit:'knit',shoes:'sneaker',acc:'cheeks'},
+  {name:'멜빵',body:'cream',face:'cool',outfit:'overall',shoes:'oxford',acc:'sunglass'},
+  {name:'세일러',body:'navy',face:'teary',outfit:'sailor',shoes:'rain',acc:'wings'}], function(a,o){
   a.body=o.body;a.face=o.face;a.outfit=o.outfit;a.shoes=o.shoes;a.acc=o.acc;
 });
 </script></body></html>
